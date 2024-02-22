@@ -1,6 +1,6 @@
 Package: r4ds.tutorials
 Title: Tutorials for "R for Data Science"
-Version: 0.1.4
+Version: 0.2.0
 Authors@R: 
     person(given = "David",
            family = "Kane",
@@ -18,19 +18,19 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 Imports: tutorial.helpers
-Suggests: arrow, babynames, dbplyr, dplyr, duckdb, dygraphs,
-        gghighlight, ggrepel, ggthemes, hexbin, janitor, leaflet,
-        learnr, maps, nycflights13, palmerpenguins, patchwork, plotly,
-        readxl, reprex, repurrrsive, rsconnect, rvest, socviz, testthat
-        (>= 3.0.0), tidymodels, tidyverse, usethis, writexl, Lahman,
-        RPostgres, RSQLite
+Suggests: arrow, babynames, dbplyr, dplyr, duckdb, gghighlight,
+        ggrepel, ggridges, ggthemes, hexbin, janitor, learnr, maps,
+        nycflights13, palmerpenguins, patchwork, readxl, reprex,
+        repurrrsive, rsconnect, rvest, socviz, testthat (>= 3.0.0),
+        tidymodels, tidyverse, usethis, writexl, Lahman, RPostgres,
+        RSQLite
 Config/testthat/edition: 3
 BugReports: https://github.com/PPBDS/r4ds.tutorials/issues
 URL: https://ppbds.github.io/r4ds.tutorials/,
         https://github.com/PPBDS/r4ds.tutorials
 NeedsCompilation: no
-Packaged: 2023-08-30 16:00:38 UTC; dkane
+Packaged: 2024-02-21 04:11:38 UTC; dkane
 Author: David Kane [aut, cre, cph] (<https://orcid.org/0000-0002-6660-3934>)
 Maintainer: David Kane <dave.kane@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-08-30 19:30:02 UTC
+Date/Publication: 2024-02-22 08:40:02 UTC

@@ -1,0 +1,1345 @@
+---
+title: Data transformation
+author: David Kane
+tutorial:
+  id: data-transformation
+output:
+  learnr::tutorial:
+    progressive: yes
+    allow_skip: yes
+runtime: shiny_prerendered
+description: 'Tutorial for Chapter 3: Data transformation'
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+library(tutorial.helpers)
+library(tidyverse)
+library(nycflights13)
+library(Lahman)
+
+knitr::opts_chunk$set(echo = FALSE)
+options(tutorial.exercise.timelimit = 60, 
+        tutorial.storage = "local") 
+```
+
+```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
+```
+
+```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
+```
+
+<!-- There are plenty of exercises in this chapter. We could add them here or make another tutorial: `data-transformation-exercises`. -->
+
+<!-- This help page --- https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html --- has lots of great stuff. Should find a way to mention it lots of items from this help page throughout this tutorial, maybe in the select() questions.  -->
+
+## Introduction
+### 
+
+This tutorial covers [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about the key functions from the [**dplyr**](https://dplyr.tidyverse.org/) package for working with data including [`filter()`](https://dplyr.tidyverse.org/reference/filter.html),  [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html), [`select()`](https://dplyr.tidyverse.org/reference/select.html), [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html), and [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html).
+
+The goal of this chapter is to give you an overview of all the key tools for transforming a data frame. We’ll start with functions that operate on rows and then columns of a data frame, then circle back to talk more about the pipe, an important tool that you use to combine verbs.
+
+## Rows
+### 
+
+The most important verbs that operate on rows of a dataset are `filter()`, which changes which rows are present without changing their order, and `arrange()`, which changes the order of the rows without changing which are present. Both functions only affect the rows. The columns are left unchanged.
+
+
+### Exercise 1
+
+Load the **tidyverse** package with the `library()` command.
+
+```{r rows-1, exercise = TRUE}
+
+```
+
+```{r rows-1-hint-1, eval = FALSE}
+library(...)
+```
+
+```{r rows-1-test, include = FALSE}
+library(tidyverse)
+```
+
+### 
+
+Take careful note of the conflicts message that’s printed when you load the **tidyverse**. It tells you that **dplyr** versions of some functions now take precedence over functions with the same name in base R. If you want to use the base version of these functions after loading **dplyr**, you’ll need to use their full names: `stats::filter()` and `stats::lag()`. So far we’ve mostly ignored which package a function comes from because most of the time it doesn’t matter. However, knowing the package can help you find help and find related functions, so when we need to be precise about which function a package comes from, we’ll use the same syntax as R: `package.name::function_name()`.
+
+### Exercise 2
+
+Load the **nycflights13** package by using the `library()` command. We use the terms "library" and "package" interchangeably, as we do the terms "function" and "command." This is somewhat sloppy but very common.
+
+```{r rows-2, exercise = TRUE}
+
+```
+
+```{r rows-2-hint-1, eval = FALSE}
+library(...)
+```
+
+```{r rows-2-test, include = FALSE}
+library(nycflights13)
+```
+
+### 
+
+Many R packages are "data" packages, meaning that they don't contain functions. Instead, they just have data. In this case, **nycflights13** includes 5 tibbles, covering all the flights that left the three biggest NYC-area airports in 2013.
+
+### Exercise 3
+
+Bring up the help page for **nycflights13** by running `help(package = "nycflights13")`. Copy/paste the names and the 2-3 word descriptions of the 5 data sets.
+
+```{r rows-3}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+### 
+
+`nycflights13::flights` contains all `r scales::comma(nrow(nycflights13::flights))` flights that departed from New York City in 2013. The data comes from the US Bureau of Transportation Statistics.
+
+
+
+### Exercise 4
+
+Print out `flights` by just writing its name. This is the same thing as issuing a `print(flights)` command.
+
+```{r rows-4, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-4-hint-1, eval = FALSE}
+flights
+```
+
+```{r rows-4-test, include = FALSE}
+flights
+```
+
+### 
+
+`flights` is a tibble, a special type of data frame used by the tidyverse to avoid some common gotchas. The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
+
+### Exercise 5
+
+Run `glimpse(flights)`.
+
+```{r rows-5, exercise = TRUE}
+
+```
+
+```{r rows-5-hint-1, eval = FALSE}
+glimpse(...)
+```
+
+```{r rows-5-test, include = FALSE}
+glimpse(flights)
+```
+
+### 
+
+`glimpse()` is more convenient than `print()` for tibbles with lots of variables. You can use `print(flights, width = Inf)` if you want to see all the variables as columns.
+
+### Exercise 6
+
+The pipe, ` |>`, takes the thing on its left and passes it along to the function on its right. Pipe `flights` to `print()`.
+
+```{r rows-6, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-6-hint-1, eval = FALSE}
+flights |> 
+  ...()
+```
+
+```{r rows-6-test, include = FALSE}
+flights |>
+  print()
+```
+
+### 
+
+The easiest way to pronounce the pipe is “then”. So, in words we would describe the above code as "flights then print."
+
+### Exercise 7
+
+`filter()` changes which rows are present without changing their order. Pipe `flights` to `filter(dep_delay > 120)` 
+
+```{r rows-7, exercise = TRUE}
+
+```
+
+```{r rows-7-hint-1, eval = FALSE}
+flights |> 
+  filter(...)
+```
+
+```{r rows-7-test, include = FALSE}
+flights |>
+  filter(dep_delay > 120)
+```
+
+### 
+
+Note that only `r scales::comma(nrow(nycflights13::flights |> filter(dep_delay > 120)))` rows remain after we filter for such a long departure delay. Why do we only see 1,000 rows here? Because Quarto, by default, only keeps 1,000 rows for display purposes.
+
+### Exercise 8
+
+Continue the pipe with `nrow()`.
+
+
+```{r rows-8, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-8-hint-1, eval = FALSE}
+flights |>
+  filter(dep_delay > 120) |> 
+  ...
+```
+
+```{r rows-8-test, include = FALSE}
+flights |>
+  filter(dep_delay > 120) |> 
+  nrow()
+```
+
+### 
+
+It is often useful to, temporarily add a simple function to the end of a pipe to confirm that the resulting tibble is what we expect it to be. Then, we remove that function and go back to working on the pipe.
+
+
+### Exercise 9
+
+Remove `nrow()` from the pipe.
+
+You can use boolean logic when filtering. For example, `&` means "and" and `|` means "or." Pipe `flights` to `filter()` with the argument set to `month == 1 & day == 1` to get all the flights on the first day of January.
+
+```{r rows-9, exercise = TRUE}
+
+```
+
+```{r rows-9-hint-1, eval = FALSE}
+flights |> 
+  filter(... & day == 1)
+```
+
+```{r rows-9-test, include = FALSE}
+flights |>
+  filter(month == 1 & day == 1)
+```
+
+### 
+
+Instead of `&`, you could have used a simple comma, `,`, because `filter()` treats statements separated by commas as all being required. For example, `filter(month == 1, day == 1)` would produce the same set of rows as this example.
+
+### Exercise 10
+
+Pipe `flights` to `filter()` with the same argument as exercise 8, but use a comma (`,`) instead of `&`. It should produce the same set of rows.
+
+```{r rows-10, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-10-hint-1, eval = FALSE}
+flights |> 
+  filter(month == 1 ... day == 1)
+```
+
+```{r rows-10-test, include = FALSE}
+flights |>
+  filter(month == 1, day == 1)
+```
+
+### 
+
+When you’re starting out with R, the easiest mistake to make is to use `=` instead of `==` when testing for equality. `filter()` will let you know when this happens.
+
+### Exercise 11
+
+There’s a useful shortcut when you’re combining `|` and `==`: `%in%`. It keeps rows where the variable equals one of the values on the right. Pipe `flights` to `filter()` with the argument `month %in% c(1, 2)`.
+
+```{r rows-11, exercise = TRUE}
+
+```
+
+```{r rows-11-hint-1, eval = FALSE}
+flights |> 
+  filter(month ... c(1, 2))
+```
+
+```{r rows-11-test, include = FALSE}
+flights |>
+  filter(month %in% c(1, 2))
+```
+
+One common mistake is writing “or” statements like you would in English:
+
+````
+flights |> 
+  filter(month == 1 | 2)
+````
+
+### 
+
+This “works”, in the sense that it doesn’t throw an error, but it doesn’t do what you want because `|` first checks the condition `month == 1` and then checks the condition 2, which is not a sensible condition to check.
+
+### Exercise 12
+
+When you run `filter()`, **dplyr** executes the filtering operation, creating a new data frame, and then prints it. It doesn’t modify the existing flights dataset because **dplyr** functions never modify their inputs.
+
+Create a new object, `jan1` which is the result of filtering `flights` to just including flights from January 1. In other words, put `jan1 <- ` in front of the code for Exercise 8 (`flights |> filter(month == 1 & day == 1)`).
+
+```{r rows-12, exercise = TRUE}
+
+```
+
+```{r rows-12-hint-1, eval = FALSE}
+... <- flights |> 
+  filter(month == 1 & day == 1)
+```
+
+```{r rows-12-test, include = FALSE}
+jan1 <- flights |>
+  filter(month == 1 & day ==1)
+```
+
+### 
+
+The most common workflow is to build a pipe of commands, each time checking that the pipe generates the answer you expect. Only at the end of the process would you assign the result to a permanent object.
+
+### Exercise 13
+
+Use the same code from the previous Exercise but, this time, create the `jan1` object at the end of the pipe, rather than the beginning. In other words, place `-> jan1` at after the call to `filter()`.
+
+```{r rows-13, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-13-hint-1, eval = FALSE}
+flights |> 
+  filter(month == 1 & day == 1) -> ...
+```
+
+```{r rows-13-test, include = FALSE}
+flights |>
+  filter(month ==1 & day == 1) -> jan1
+```
+
+### 
+
+The assignment is usually placed at the start of the pipe, but the result is the same if the assignment is at the end.
+
+### Exercise 14
+
+`arrange()` changes the order of the rows based on the value of the columns. It takes a data frame and a set of column names (or more complicated expressions) to order by. If you provide more than one column name, each additional column will be used to break ties in the values of preceding columns. 
+
+Pipe `flights` to `arrange()`, passing in the arguments `year, month, day, dep_time`.
+
+```{r rows-14, exercise = TRUE}
+
+```
+
+```{r rows-14-hint-1, eval = FALSE}
+flights |> 
+  arrange(...)
+```
+
+```{r rows-14-test, include = FALSE}
+flights |>
+  arrange(year, month, day, dep_time)
+```
+
+### 
+
+The first flight of the year was United (the `carrier` was "UA").
+
+### Exercise 15
+
+You can use `desc()` on a column inside of `arrange()` to re-order the data frame based on that column in descending (big-to-small) order. Pipe `flights` to `arrange()` with `desc(dep_delay)` as its argument.
+
+```{r rows-15, exercise = TRUE}
+
+```
+
+```{r rows-15-hint-1, eval = FALSE}
+flights |> 
+  arrange(...(dep_delay))
+```
+
+```{r rows-15-test, include = FALSE}
+flights |>
+  arrange(desc(dep_delay))
+```
+
+### 
+
+Note that the number of rows has not changed – we’re only arranging the data, we’re not filtering it.
+
+### Exercise 16
+
+Although `filter()` and `arrange()` are the most commonly used **dplyr** commands for working with rows, other functions are also useful. `distinct()` finds all the unique rows in a dataset, so in a technical sense, it primarily operates on the rows. Pipe `flights` to `distinct()` with no arguments.
+
+```{r rows-16, exercise = TRUE}
+
+```
+
+```{r rows-16-hint-1, eval = FALSE}
+flights |> 
+  ...()
+```
+
+```{r rows-16-test, include = FALSE}
+flights |>
+  distinct()
+```
+
+### 
+
+Each row in `flights` is already distinct so we get back the same number of rows as we started with.  
+
+
+### Exercise 17
+
+Most of the time, however, you’ll want the distinct combination of some variables, so you can also optionally supply column names. Pipe `flights` to `distinct()` with the argument `origin`.
+
+```{r rows-17, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-17-hint-1, eval = FALSE}
+flights |> 
+  distinct(...)
+```
+
+```{r rows-17-test, include = FALSE}
+flights |>
+  distinct(origin)
+```
+
+### 
+
+There are only three distinct values for the `origin` variable because `flights` only contains data for the departures from the three major airports around New York City.
+
+### Exercise 18
+
+`distinct()`, like most **dplyr** functions, can accept more than one variable as an argument. Pipe `flights` to `distinct()` with the argument `(origin, dest)`.
+
+```{r rows-18, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-18-hint-1, eval = FALSE}
+flights |> 
+  distinct(origin, ...)
+```
+
+```{r rows-18-test, include = FALSE}
+flights |>
+  distinct(origin, dest)
+```
+
+### Exercise 19
+
+It is often handy to keep values for all the other variables when using `distinct()`. Run the same command as above, but add the `.keep_all` argument with a value of `TRUE`.
+
+```{r rows-19, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r rows-19-hint-1, eval = FALSE}
+flights |> 
+  distinct(origin, dest, .keep_all = ...)
+```
+
+```{r rows-19-test, include = FALSE}
+flights |>
+  distinct(origin, dest, .keep_all = TRUE)
+```
+
+### 
+
+Now, the dataset should show where the planes lifted off, and where they landed, along with everything else. 
+
+### Exercise 20
+
+If you want to find the number of occurrences instead, you’re better off swapping `distinct()` for `count()`, and with the `sort = TRUE` argument you can arrange them in descending order of number of occurrences. Pipe `flights` to `count()` with `origin, dest, sort = TRUE` as the arguments.
+
+```{r rows-20, exercise = TRUE}
+
+```
+
+```{r rows-20-hint-1, eval = FALSE}
+flights |>
+  count(origin, dest, ... = TRUE)
+```
+
+```{r rows-20-test, include = FALSE}
+flights |>
+  count(origin, dest, sort = TRUE)
+```
+
+### 
+
+In modern code, arguments to **dplyr** functions are proceeded with dots, `.`, in order to help distinguish them from variable names. But, `count()` is an older funtion, so its arguments, like `sort`, do not have a dot in front. 
+
+
+## Columns
+### 
+
+There are four important verbs that affect the columns without changing the rows: `mutate()` creates new columns that are derived from the existing columns, `select()` changes which columns are present; `rename()` changes the names of the columns; and `relocate()` changes the positions of the columns. You will use `mutate()` and `select()` often.
+
+### Exercise 1
+
+Pipe `flights` to the `mutate()` function. Within the call to `mutate()`, create a variable `gain` which equals `dep_delay` minus `arr_delay`.
+
+
+```{r columns-1, exercise = TRUE}
+
+```
+
+```{r columns-1-hint-1, eval = FALSE}
+flights |> 
+  mutate(... = dep_delay - ...)
+```
+
+``` {r columns-1-test, include = FALSE}
+flights |>
+  mutate(gain = dep_delay - arr_delay)
+```
+
+### 
+
+If there is only one new variable created in a `mutate()` command, we generally just place it within the parenthesis. However, if there is more than one new variable, we normally skip a line, both before and after the variables.
+
+### Exercise 2
+
+Using the same pipe as above, create another variable, within the call to `mutate()`, called `speed` equal to `distance / air_time * 60`.
+
+```{r columns-2, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r columns-2-hint-1, eval = FALSE}
+flights |> 
+  mutate(
+    gain = dep_delay - arr_delay,
+    ... = distance / ... * 60
+  )
+```
+
+``` {r columns-2-test, include = FALSE}
+flights |>
+  mutate(gain = dep_delay - arr_delay,
+         speed = distance / air_time * 60)
+```
+
+### 
+
+Having the variable creation start on a new line and having the closing parenthesis on its own line makes the code easier to read.
+
+### Exercise 3
+
+By default, `mutate()` adds new columns on the right hand side of your dataset, which makes it difficult to see what’s happening with `flights` since there are so many variables. We can use the `.before` argument to instead add the variables to the left hand side.
+
+Set `.before` equal to `1` in the call to `mutate()`.
+
+```{r columns-3, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r columns-3-hint-1, eval = FALSE}
+flights |> 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .before = ...
+  )
+```
+
+``` {r columns-3-test, include = FALSE}
+flights |>
+  mutate(gain = dep_delay - arr_delay,
+         speed = distance / air_time * 60,
+         .before = 1)
+```
+
+### 
+
+The `.` is a sign that `.before` is an argument to the function, not the name of a third new variable we are creating. Remember that in RStudio, the easiest way to see a dataset with many columns is `View()`.
+
+### Exercise 4
+
+You can also use `.after` to add after a variable, and in both `.before` and `.after` you can use the variable name instead of a position. Use the above code, but remove the `.before` argument. Add the `.after` argument with a value of `day`.
+
+```{r columns-4, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r columns-4-hint-1, eval = FALSE}
+flights |> 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .after = ...
+  )
+```
+
+``` {r columns-4-test, include = FALSE}
+flights |> 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .after = day
+    )
+```
+
+### 
+
+`.after`, like .`before` and many **tidyverse** functions, uses the [`<tidy-select>`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) argument modifier which enables multiple ways of selecting columns other than just providing a column name.
+
+
+### Exercise 5
+
+You can control which variables are kept with the `.keep` argument. A particularly useful argument is `"used"` which specifies that we only keep the columns that were involved or created in the `mutate()` step. Remove `.after` from the previous pipe, replacing it with `.keep = "used"`.
+
+```{r columns-5, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r columns-5-hint-1, eval = FALSE}
+flights |> 
+  mutate(
+    gain = dep_delay - arr_delay,
+    hours = air_time / 60,
+    .keep = "..."
+  )
+```
+
+``` {r columns-5-test, include = FALSE}
+flights |> 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .keep = "used"
+    )
+```
+
+### 
+
+The four allowed values for `.keep` are `"all"`, `"used"`, `"unused"`, and `"none"`. From the `mutate()` [help page](https://dplyr.tidyverse.org/reference/mutate.html):
+
+* "all" retains all columns from `.data`. This is the default.
+
+* "used" retains only the columns used in `...` to create new columns. This is useful for checking your work, as it displays inputs and outputs side-by-side.
+
+* "unused" retains only the columns not used in `...` to create new columns. This is useful if you generate new columns, but no longer need the columns used to generate them.
+
+* "none" doesn't retain any extra columns from `.data`. Only the grouping variables and columns created by `...` are kept.
+
+<!-- DK: The above is too long? -->
+
+### Exercise 6
+
+Many data sets come with hundreds or even thousands of variables. We often want to focus on just a handful of these. `select()`, one of the four most important functions in **dplyr**, is the easiest approach for keeping just some of the columns. (As usual, we use the terms "variables" and "columns" interchangeably.)
+
+Pipe `flights` to `select(year, month, day)`.
+
+
+```{r columns-6, exercise = TRUE}
+
+```
+
+```{r columns-6-hint-1, eval = FALSE}
+flights |> 
+  select(...)
+```
+
+``` {r columns-6-test, include = FALSE}
+flights |>
+  select(year, month, day)
+```
+
+### 
+
+The first argument to `select()`, as with most **tidyverse** functions is `.data`, meaning the data frame or tibble from which we want to select the variables.
+
+### Exercise 7
+
+Instead of listing the columns to keep, we can provide a range of columns by using a `:` in between column names. Change the pipe so that we are selecting all the columns from `year` through `day`.
+
+```{r columns-7, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r columns-7-hint-1, eval = FALSE}
+flights |> 
+  select(year:...)
+```
+
+``` {r columns-7-test, include = FALSE}
+flights |>
+  select(year:day)
+```
+
+### 
+
+This is the same result as the prior example. From the `select()` [help page](https://dplyr.tidyverse.org/reference/select.html):
+
+Tidyverse selections implement a dialect of R where operators make it easy to select variables:
+
+* `:` for selecting a range of consecutive variables.
+
+* `!` for taking the complement of a set of variables.
+
+* `&` and `|` for selecting the intersection or the union of two sets of variables.
+
+* `c()` for combining selections.
+
+
+### Exercise 8
+
+Put an explanation point, `!`, in front of `year:day` from the previous answer.
+
+
+```{r columns-8, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r columns-8-hint-1, eval = FALSE}
+flights |> 
+  select(... year:day)
+```
+
+``` {r columns-8-test, include = FALSE}
+flights |>
+  select(! year:day)
+```
+
+### 
+
+This keeps all the columns *except* for those between `year` and `day`, inclusive. You can also use `-` instead of `!` (and you’re likely to see that in the wild); we recommend `!` because it reads as “not”, and combines well with `&` and `|`.
+
+### Exercise 9
+
+We can also check the characteristics of the columns and then use that information to decide which to keep. Pipe `flights` to `select()`. Within `select()`, insert `where(is.character)`.
+
+```{r columns-9, exercise = TRUE}
+
+```
+
+```{r columns-9-hint-1, eval = FALSE}
+flights |> 
+  select(...)
+```
+
+``` {r columns-9-test, include = FALSE}
+flights |>
+  select(where(is.character))
+```
+
+### 
+
+There are a number of helper functions you can use within `select()`:
+
+* `starts_with("abc")`: matches names that begin with “abc”.
+* `ends_with("xyz")`: matches names that end with “xyz”.
+* `contains("ijk")`: matches names that contain “ijk”.
+* `num_range("x", 1:3)`: matches x1, x2 and x3.
+
+<!-- DK: Add examples of each of these? This question could be clearer . . .-->
+
+### Exercise 10
+
+You can rename variables as you `select()` them by using `=`. The new name appears on the left hand side of the `=`, and the old variable appears on the right hand side. Pipe `flights` to `select()` with `tail_num = tailnum` within the parenthesis.
+
+```{r columns-10, exercise = TRUE}
+
+```
+
+```{r columns-10-hint-1, eval = FALSE}
+flights |> 
+  select(tail_num = ...)
+```
+
+``` {r columns-10-test, include = FALSE}
+flights |>
+  select(tail_num = tailnum)
+```
+
+### 
+
+This both keeps only the variable `tailnum` from `flights` *and* renames it to `tail_num`.
+
+
+### Exercise 11
+
+You can also rename a variable with the `rename()` function. This has no impact on the other variables. Pipe `flights` to `rename()` with `tail_num = tailnum` within the parenthesis.
+
+```{r columns-11, exercise = TRUE}
+
+```
+
+```{r columns-11-hint-1, eval = FALSE}
+flights |> 
+  rename(...)
+```
+
+``` {r columns-11-test, include = FALSE}
+flights |>
+  rename(tail_num = tailnum)
+```
+
+### 
+
+Note how all the columns remain when you use `rename()`. If you have a bunch of inconsistently named columns and it would be painful to fix them all by hand, check out `janitor::clean_names()` which provides some useful automated cleaning.
+
+### Exercise 12
+
+Use `relocate()` to move variables around. You might want to collect related variables together or move important variables to the front of your tibble. By default `relocate()` moves variables to the front. Pipe `flights` into `relocate(time_hour, air_time)`.
+
+```{r columns-12, exercise = TRUE}
+
+```
+
+```{r columns-12-hint-1, eval = FALSE}
+flights |> 
+  ...(time_hour, air_time)
+```
+
+``` {r columns-12-test, include = FALSE}
+flights |>
+  relocate(time_hour, air_time)
+```
+
+### 
+
+You can also specify where to put these variables by using the `.before` and `.after` arguments, just as in `mutate()`:
+
+````
+flights |> 
+  relocate(year:dep_time, .after = time_hour)
+flights |> 
+  relocate(starts_with("arr"), .before = dep_time)
+````
+
+
+
+## The pipe
+### 
+
+We’ve shown you simple examples of the pipe above, but its real power arises when you start to combine multiple verbs. For example, imagine that you wanted to find the fast flights to Houston’s IAH airport: you need to combine `filter()`, `mutate()`, `select()`, and `arrange()`.
+
+### Exercise 1
+
+Pipe `flights` to `filter()` with the argument set to `dest == "IAH"`. 
+
+```{r the-pipe-1, exercise = TRUE}
+
+```
+
+```{r the-pipe-1-hint-1, eval = FALSE}
+flights |> 
+  filter(dest == "...")
+```
+
+``` {r the_pipe-1-test, include = FALSE}
+flights |>
+  filter(dest == "IAH")
+```
+
+### 
+
+If you use `=` instead of `==`, R will give you a warning. One equal sign is for *assignment*. Two equal signs are for *comparisons*. Remeber that variable names, like `dest` are not quoted while the values of those variables, like `IAH` are quoted.
+
+### Exercise 2
+
+Continue the pipe to `mutate()`, creating a new variable `speed` which equals `distance / air_time`.
+
+```{r the-pipe-2, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r the-pipe-2-hint-1, eval = FALSE}
+flights |> 
+  filter(dest == "IAH") |> 
+  mutate(... = ... / ...)
+```
+
+``` {r the_pipe-2-test, include = FALSE}
+flights |> 
+  filter(dest == "IAH") |> 
+  mutate(speed = distance / air_time)
+```
+
+### 
+
+This slow build up of the analysis, line-by-line, examining the result each time is the standard rhythm of good data science. Note, however, that we can't easily see the new variable we created because it is, by default, on the end of the tibble.
+
+
+### Exercise 3
+
+Add `.before = 1` to the call to `mutate()`.
+
+```{r the-pipe-3, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r the-pipe-3-hint-1, eval = FALSE}
+...
+  mutate(speed = distance / air_time, ... = 1)
+```
+
+``` {r the_pipe-3-test, include = FALSE}
+flights |> 
+  filter(dest == "IAH") |> 
+  mutate(speed = distance / air_time, .before = 1)
+```
+
+### 
+
+The hint we give will generally just show you the last line of code, not the entire pipe. We can now see `speed`, but the values, of around 6, are strange. Planes don't go 6 miles per hour! The problem, if course, is that the current units are miles per minutes, since `distance` is in miles and `air_time` is in minutes.
+
+### Exercise 4
+
+Add `* 60` to the calculation of speed within the call to `mutate()` so that the result, `speed`, is in miles per hour.
+
+```{r the-pipe-4, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r the-pipe-4-hint-1, eval = FALSE}
+...
+  mutate(speed = distance / air_time * ..., .before = 1)
+```
+
+``` {r the_pipe-4-test, include = FALSE}
+flights |> 
+  filter(dest == "IAH") |> 
+  mutate(speed = distance / air_time * 60, .before = 1)
+```
+
+### 
+
+Of course, in steady cruise, planes go faster than 300 to 400 mile per hour, but they go more slowly during take-off and landing, and, more importantly, they don't travel in a straight line between airports. 
+
+### Exercise 5
+
+We don't want to deal with 20 variables. Pipe the current code to `select()` with the argument `year:day, dep_time, carrier, flight, speed`. 
+
+```{r the-pipe-5, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r the-pipe-5-hint-1, eval = FALSE}
+...
+  select(year:day, ... , ... , ... , ...)
+```
+
+``` {r the_pipe-5-test, include = FALSE}
+flights |> 
+  filter(dest == "IAH") |> 
+  mutate(speed = distance / air_time * 60, .before = 1) |>
+  select(year:day, dep_time, carrier, flight, speed)
+```
+
+### 
+
+We are now looking at just the variables which matter (for this analysis). Other variables would matter in other contexts. In fact, when working with large data sets, `select()` is often one of the first commands in the pipe.
+
+### Exercise 6
+
+Pipe the result to `arrange()` with the argument set to `desc(speed)`. This will order the speed from fastest to slowest.
+
+```{r the-pipe-6, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r the-pipe-6-hint-1, eval = FALSE}
+...
+  arrange(desc(speed))
+```
+
+``` {r the_pipe-6-test, include = FALSE}
+flights |> 
+  filter(dest == "IAH") |> 
+  mutate(speed = distance / air_time * 60, .before = 1) |>
+  select(year:day, dep_time, carrier, flight, speed) |>
+  arrange(desc(speed))
+```
+
+### 
+
+Look at the data. Can you think of a reason that so many of the fastest flights happened on August 27 and 28? Our *guess* is that the jet stream was much slower than normal on those days. But solving mysteries like this is precisely why we need to use data science tools like **dplyr**.
+
+
+<!-- DK: Put in another pipe or two? Maybe show the final result at the beginning, and then show how we build to it at the end? -->
+
+
+
+## Groups
+### 
+
+So far you’ve learned about functions that work with rows and columns. **dplyr** gets even more powerful when you add in the ability to work with groups. In this section, we’ll focus on the most important function, `summarize()`, as well as the `slice_*()` family of functions.
+
+<!-- DK: Does `reframe()` belong in this section? Yes! -->
+
+### Exercise 1
+
+Imagine that we want to know what the average, or mean, departure delay is. We need to apply the function for calulating an average in R, `mean()`, to the variable for departure delay, which is `dep_delay`. The function `summarize()` applies a function like `mean()` to a variable like `dep_delay` within the **dplyr** framework.
+
+Pipe `flights` into `summarize()`, with `mean(dep_delay)` as the argument.
+
+```{r groups-1, exercise = TRUE}
+
+```
+
+```{r groups-1-hint-1, eval = FALSE}
+flights |> 
+  summarize(mean(...))
+```
+
+``` {r groups-1-test, include = FALSE}
+flights |> 
+  summarize(mean(dep_delay))
+```
+
+### 
+
+The result was a tibble with 1 row and 1 column. Like `filter()`, `arrange()`, `select()` and `mutate()`, `summarize()` takes a data frame (or tibble) as an input and produces a tibble as an output. 
+
+### Exercise 2
+
+The prior result was `NA` because there are some missing values in the `dep_delay` variable. Almost all statistical functions in R produce an `NA` result by default if any of the input values are `NA`. We can ignore the `NA` values when using `mean()` by adding `na.rm = TRUE` to `mean()`.
+
+Add the argument `na.rm = TRUE` to `mean()`. Don't forget to separate the arguments with commas.
+
+```{r groups-2, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r groups-2-hint-1, eval = FALSE}
+flights |> 
+  summarize(mean(dep_delay, ... = TRUE))
+```
+
+``` {r groups-2-test, include = FALSE}
+flights |> 
+  summarize(mean(dep_delay, na.rm = TRUE))
+```
+
+### 
+
+Again, we have a tibble as the result. Tibbes in and tibbles out is a fundamental pattern in the *Tidyverse*. The value is `r mean(flights$dep_delay, na.rm = TRUE)`. Note, however, that the name of the variable, the one column name in our tibble, is `mean(dep_delay, na.rm = TRUE)`. (To refer to this variable name, since it includes spaces and other weird characters, we have to use backticks.) 
+
+The reason for this weirdness is that we did not provide a variable name into which `summarize()` could place the result, so it used the name of the command. 
+
+
+### Exercise 3
+
+Update the code so that a new variable, `delay` is equal to the result of `mean(dep_delay, na.rm = TRUE)`. We are creating a new variable in the same way that `mutate()` does.
+
+```{r groups-3, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r groups-3-hint-1, eval = FALSE}
+flights |> 
+  summarize(
+    ... = mean(dep_delay, na.rm = TRUE)
+  )
+```
+
+``` {r groups-3-test, include = FALSE}
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE)
+  )
+```
+
+### 
+
+The value is the same but, now, the variable in the resulting tibble has a reasonable name. Both `mutate()` and `summarize()` are all about creating new columns.
+
+### Exercise 4
+
+Instead of an overall average flight delay, we want to calculate the average flight delay for each `month`. Fortunately, `summarize()`, like many **dplyr** functions, provides a `.by` argument to make such calculations easy. Use the code from above, but add `.by = month` to the call to `summarize()`. 
+
+```{r groups-4, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r groups-4-hint-1, eval = FALSE}
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    .by = ...
+  )
+```
+
+```{r groups-4-test, include = FALSE}
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    .by = month)
+```
+
+### 
+
+Note the weird sort order. By default, `summarize()` uses the character sort order of the `.by` variable. 
+
+### Exercise 5
+
+You can create any number of summaries in a single call to `summarize()`. One very useful summary is `n()`, which returns the number of rows in each group. Add `n = n()` to the call to `summarize()`, after the line which creates `delay`.
+
+```{r groups-5, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r groups-5-hint-1, eval = FALSE}
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    ... = ...,
+    .by = month
+  )
+```
+
+```{r groups-5-test, include = FALSE}
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n = n(),
+    .by = month
+  )
+```
+
+### 
+
+Note that the letter `n` does two completely different things in this code. First, it is the name of a new variable which we have created. Second, it refers to a function, `n()`, which calculates the total number of rows in the tibble for each group.
+
+<!-- DK: Add a bunch more summarize examples, using other example functions from the ?summarize page? -->
+
+### Exercise 6
+
+<!-- DK: Make better use of https://dplyr.tidyverse.org/reference/slice.html -->
+
+There are five handy functions, all part of the [`slice_*()`](https://dplyr.tidyverse.org/reference/slice.html) family, that allow you extract specific rows. Pipe `flights` to `slice_head(n = 3)`.
+
+```{r groups-6, exercise = TRUE}
+
+```
+
+```{r groups-6-hint-1, eval = FALSE}
+flights |> 
+  slice_head(n = ...)
+```
+
+```{r groups-6-test, include = FALSE}
+flights |> 
+  slice_head(n = 3)
+```
+
+### 
+
+This returns the first three rows in `flights`. The default value for the `n` argument is `1`.
+
+### Exercise 7
+
+`slice_tail()` does the same for the end of the tibble which `slice_head()` does for the beginning. Pipe `flights` to `slice_tail()` but set `n` to equal `8`.
+
+```{r groups-7, exercise = TRUE}
+
+```
+
+```{r groups-7-hint-1, eval = FALSE}
+flights |> 
+  slice_tail(... = ...)
+```
+
+```{r groups-7-test, include = FALSE}
+flights |> 
+  slice_tail(n = 8)
+```
+
+### 
+
+The terminology `head` and `tail` refer to UNIX command line utilities which perform the same function. 
+
+### Exercise 8
+
+When examining a new tibble, we need to do more than just look at the top and bottom. We should look at some randomly selected rows as well. Pipe `flights` to `slice_sample()`, setting `n` to equal `6`.
+
+
+```{r groups-8, exercise = TRUE}
+
+```
+
+```{r groups-8-hint-1, eval = FALSE}
+flights |> 
+  ...(n = 6)
+```
+
+```{r groups-8-test, include = FALSE}
+flights |> 
+  slice_sample(n = 6)
+```
+
+### 
+
+Note how the flights come from a variety of months, unlike when we used `slice_head()` --- months all equal 1 --- and `slice_tail()` --- months all equal 9. (Note how the `flights` data is itself sorted in a weird way, with Decemmber flights sorted in between November (11) and February (2).)
+
+
+### Exercise 9
+
+`slice_max()` returns the row  with the `n` largest values of whatever variable you pass in as the value to the `order_by` argument. Pipe `flights` to `slice_max()`, setting `order_by` to `dep_delay` and `n` to equal `5`.
+
+```{r groups-9, exercise = TRUE}
+
+```
+
+```{r groups-9-hint-1, eval = FALSE}
+flights |> 
+  slice_max(... = dep_delay, n = ...)
+```
+
+```{r groups-9-test, include = FALSE}
+flights |> 
+  slice_max(order_by = dep_delay, n = 5)
+```
+
+### 
+
+Since `dep_delay` is in minutes, the most delayed flights were up to 20 hours delayed. Looking at extreme values is always important. For example, a single data error could have significantly affected the average calculations we did above.
+
+
+### Exercise 10
+
+`slice_min()` does the same as `slice_max()` but in reverse. Pipe `flights` to `slice_min()`, setting `order_by` to `dep_delay` and `n` to equal `5`.
+
+
+```{r groups-10, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r groups-10-hint-1, eval = FALSE}
+flights |> 
+  slice_...(... = dep_delay, n = ...)
+```
+
+```{r groups-10-test, include = FALSE}
+flights |> 
+  slice_min(order_by = dep_delay, n = 5)
+```
+
+### 
+
+Are there really flights that take off 30 minutes early? Maybe? Again, data science is about looking at our data extremely closely. You can never look at your data too much. It is your job to determine if the data is correct, or at least not obviously incorrect.
+
+### Exercise 11
+
+Most of the `slice_*()` functions also take a `by` (or `.by`) argument. Pipe `flights` to `slice_min()`, setting `order_by` to `dep_delay`, `n` to equal `1` and `by` to `origin`. This will get the individual flight, from each origin airport, with the smallest delay.
+
+```{r groups-11, exercise = TRUE}
+
+```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
+
+```{r groups-11-hint-1, eval = FALSE}
+flights |> 
+  slice_min(order_by = dep_delay, n = ..., by = ...)
+```
+
+```{r groups-11-test, include = FALSE}
+flights |> 
+  slice_min(order_by = dep_delay, n = 1, by = origin)
+```
+
+### 
+
+Why does `slice_min()` take `by` but summarize take `.by`? It is a quirk of the evolution of these functions. Don't worry about it. If you use the wrong one, R will provide a gentle reminder.
+
+
+### 
+
+Note that `.by` is a relatively new addition to **dplyr** functions. In the past, to calculate group statistics you needed to issue the `group_by()` command in the pipe before the call to `summarize()`. Example:
+
+````
+flights |> 
+  group_by(month) |> 
+  summarize(delay = mean(dep_delay, na.rm = TRUE))
+````
+
+Using `.by` is a much better approach. Never use `group_by()` unless you have a really good reason to do so.
+
+
+<!-- Add Case study -->
+
+
+
+
+## Summary
+### 
+
+This tutorial covered [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You learned about the key functions from the [**dplyr**](https://dplyr.tidyverse.org/) package for working with data including [`filter()`](https://dplyr.tidyverse.org/reference/filter.html),  [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html), [`select()`](https://dplyr.tidyverse.org/reference/select.html), [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html), and [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html).
+
+
+
+
+```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
+```
