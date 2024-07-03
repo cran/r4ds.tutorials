@@ -29,33 +29,25 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
+<!-- Took students 42 minutes on average, so could add a lot more material. 60 minutes is a good target. -->
+
+<!-- Add glimpse(), summary(), slice_sample(), print() and other commands for looking at a data set. Also drop_na(). -->
+
+<!-- Perhaps add a little introduction to R scripts. That way, we could use them in the first class. -->
+
+<!-- Fix introduction and summary. -->
+
+<!-- Should the data pipe come before the plot? -->
+
+<!-- Add drop_na() since we often use that in the first week of the course. -->
+
 <!-- Make this tutorial better. Make sure there are no mistakes. Make sure it is clear. Drop a bunch of knowledge from Chapter 1. But also do some reminding of stuff from Getting Started from tutorial.helpers. -->
 
-<!-- Moved from Getting Started -->
+<!-- Why don't links open if you pull out the tutorial into its own window? Mention this somewhere here. In Introduction, Make more clear that you can pull out the tutorial into its own window. But is that really a good idea? Explain to students how to move border pane around. Do this in tutorial.helpers?  In the introduction to the setting of RStudio, there could be more information on how to manipulate the size of each pane (ex. to view the content of the tutorial, to have more space for coding). -->
 
-<!-- ### Exercise 4 -->
+<!-- Need to make sure the early tutorials cover things like scale_x_log10(labels = scales::comma_format()) since we use it in class in weeks 1 and 2. -->
 
-<!-- <!-- DK: Should tidyverse be the package we use? What if they have not installed it? --> -->
-
-<!-- Let's load our first R package. Type  `library(tidyverse)` and then hit "Run Code".  -->
-
-<!-- ```{r tutorial-exercises-4, exercise = TRUE} -->
-
-<!-- ``` -->
-
-<!-- ```{r tutorial-exercises-4-hint-1, eval = FALSE} -->
-<!-- library(...) -->
-<!-- ``` -->
-
-<!-- Nothing is returned, which is often the case with R code. But note the check mark which has appeared next to "Exercise 4" above. This indicates that you have submitted your answer. -->
-
-<!-- ###  -->
-
-<!-- Note that "library" and "package" mean the same things in R. We have different words for historical reasons. However, only the `library()` command will load a package/library, giving us access to the functions and data which it contains. -->
-
-<!-- ###  -->
-
-
+<!-- Maybe rethink the background questions in Prerequisites. Could have more? (Like who to have in your breakout room. How much CS or Stats background they have. What city are they in.) -->
 
 
 ## Introduction
@@ -98,9 +90,17 @@ Before you start doing data science, you must load the packages you are going to
 library(tidyverse)
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-2-test, include = FALSE}
 library(tidyverse)
 ```
+
+### 
+
+Nothing is returned, which is often the case with R code. But note the check mark which has appeared next to "Exercise 2" above. This indicates that you have submitted your answer.
+
+### 
+
+Note that "library" and "package" mean the same things in R. We have different words for historical reasons. However, only the `library()` command will load a package/library, giving us access to the functions and data which it contains.
 
 ### 
 
@@ -150,10 +150,6 @@ question_text(NULL,
 
 You can find help about an entire package with `help(package = "ggplot2")`. It is confusing, but unavoidable, that package names are sometimes unquoted, as in `library(ggplot2)`, and sometimes quoted, as in `help(package = "ggplot2")`. If one does not work, try the other.
 
-### 
-
-Note that, for historical reasons, we refer to R packages like **ggplot2** as *packages* most commonly, but also as *libraries*. That is the reason why the `library()` function is used to load packages.
-
 
 ### Exercise 5
 
@@ -167,7 +163,7 @@ Assign the value of `sqrt(144)` to the variable `x`. Remember to use the assignm
 x <- sqrt(144)
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-5-test, include = FALSE}
 x <- sqrt(144)
 ```
 
@@ -191,7 +187,7 @@ In data science, it's always a good idea to explore the data before you use it. 
 diamonds
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-6-test, include = FALSE}
 diamonds
 ```
 
@@ -212,11 +208,11 @@ When we type the name of a tibble in the R Console, we are implicitly using the 
 print(...)
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-7-test, include = FALSE}
 print(diamonds)
 ```
 
-This produces the same result as just typing `diamonds`. But `print()` is more flexible, allowing us to specify different numbers of rows and columns. You can use the `width` argument to change how many columns appear. `print(diamonds, n = Inf, width = Inf)` will cause everything to be printed.
+This produces the same result as just typing `diamonds`. But `print()` is more flexible, allowing us to specify different numbers of rows and columns. You can use the `width` argument to change how many columns appear. `print(diamonds, width = Inf)` will cause all columns to be printed.
 
 ### Exercise 8
 
@@ -230,7 +226,7 @@ Print out the first three rows of `diamonds`. Note that the number of rows print
 print(diamonds, n = 3)
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-8-test, include = FALSE}
 print(diamonds, n = 3)
 ```
 
@@ -241,7 +237,7 @@ print(diamonds, n = 3)
 
 ### Exercise 9
 
-Now use `glimpse()` to look at the `diamonds` data set. To learn more about the `glimpse()` function, run `?glimpse`.
+Now use `glimpse()` to examine the `diamonds` data set. To learn more about the `glimpse()` function, run `?glimpse`.
 
 ```{r what-you-will-learn-9, exercise = TRUE}
 
@@ -251,7 +247,7 @@ Now use `glimpse()` to look at the `diamonds` data set. To learn more about the 
 glimpse(diamonds)
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-9-test, include = FALSE}
 glimpse(diamonds)
 ```
 
@@ -259,7 +255,7 @@ glimpse(diamonds)
 
 `glimpse()` displays columns running down the page and the data running across across. Note how the "type" of each variable is listed next to the variable name. For example, `price` is listed as `<int>`, meaning that it is an integer variable.
 
-`view()` is another useful function, but, because it is interactive, we can't use it within a tutorial. 
+`view()` is another useful function, but, because it is interactive, we should not use it within a tutorial. 
 
 ### Exercise 10
 
@@ -273,7 +269,7 @@ Run `summary()` on `diamonds`.
 summary(...)
 ```
 
-```{r include = FALSE}
+```{r what-you-will-learn-10-test, include = FALSE}
 summary(diamonds)
 ```
 
@@ -334,7 +330,7 @@ First, let's `glimpse()` the `mpg` data set. Looking at the axis titles above, c
 glimpse(...)
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-1-test, include = FALSE}
 glimpse(mpg)
 ```
 
@@ -356,11 +352,11 @@ Run `ggplot()`, setting `data` equal to `mpg`.
 ggplot(data = ...)
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-2-test, include = FALSE}
 ggplot(data = mpg)
 ```
 
-`ggplot()` initializes a ggplot object. Your output should be an empty canvas.
+`ggplot()` initializes a ggplot object. Your output should be an empty screen.
 
 
 ### Exercise 3
@@ -377,7 +373,7 @@ The first argument to `ggplot()` is `data`, as above. The second argument is `ma
 ggplot(data = mpg, mapping = ...())
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-3-test, include = FALSE}
 ggplot(data = mpg, mapping = aes())
 ```
 
@@ -400,7 +396,7 @@ ggplot(data = mpg,
                      y = ...))
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-4-test, include = FALSE}
 ggplot(data = mpg, 
        mapping = aes(x = displ, 
                      y = hwy))
@@ -433,7 +429,7 @@ ggplot(data = mpg,
   geom_...()
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-5-test, include = FALSE}
 ggplot(data = mpg, 
        mapping = aes(x = displ,
                      y = hwy)) +
@@ -463,7 +459,7 @@ ggplot(data = mpg,
   geom_point(alpha = ...)
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-6-test, include = FALSE}
 ggplot(data = mpg, 
        mapping = aes(
          x = displ,
@@ -493,7 +489,7 @@ ggplot(data = mpg,
              color = "...")
 ```
 
-```{r include = FALSE}
+```{r how-this-book-is-organized-7-test, include = FALSE}
 ggplot(data = mpg, 
        mapping = aes(
          x = displ,
@@ -512,7 +508,7 @@ R has 657 (built in color names)[https://www.nceas.ucsb.edu/sites/default/files/
 
 Now, use `labs()` to add labeling to the graph. Set the `title` to `"Measurements for Engine Displacement and Highway Fuel Efficiency of Select Car Models"` and the `subtitle` to `"Cars with greater enginer displacement are less fuel efficient"`. To label the axes, set `x` to `"Engine Displacement (L)"` and `y` to `"Highway Efficiency (mpg)"`. Set the `caption` to `"EPA (2008)"`.
 
-The caption is generally used to credit a the relevant data sources.
+The caption is generally used to credit the relevant data sources.
 
 ```{r how-this-book-is-organized-8, exercise = TRUE }
 
@@ -557,12 +553,40 @@ If you plan to do several of the tutorials in this package, you may find it usef
 install.packages(
   c("arrow", "babynames", "curl", "duckdb", "gapminder", 
     "ggrepel", "ggridges", "ggthemes", "hexbin", "janitor", "Lahman", 
-    "maps", "nycflights13", "openxlsx", "palmerpenguins", 
+    "leaflet", "maps", "nycflights13", "openxlsx", "palmerpenguins", 
     "repurrrsive", "tidymodels", "writexl")
   )
 ```
 
-<!-- DK: Is the above really all the packages? What about the database ones? Or jsonlite? -->
+<!-- Is the above really all the packages? What about the database ones? Or jsonlite? -->
+
+Below are two background questions which are sometimes used by instructors in organizing their breakout rooms.
+
+### Exercise 1
+
+How old are you?
+
+```{r prerequisites-1}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 1)
+```
+
+### Exercise 2
+
+What is your highest level of education? (Just completed 10th grade. Sophomore in college. Et cetera.)
+
+```{r prerequisites-2}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 1)
+```
 
 ## Running R code
 ### 
@@ -582,7 +606,7 @@ Let's warm up by examining the `gss_cat` tibble from the **forcats** package. Si
 gss_cat
 ```
 
-```{r include = FALSE}
+```{r running-r-code-1-test, include = FALSE}
 gss_cat
 ```
 
@@ -591,7 +615,7 @@ gss_cat
 Whenever we print a tibble, the number of rows and columns is displayed at the top:
 
 ````
-# A tibble: 21,483 × 9
+A tibble: 21,483 × 9
 ````
 
 You can also see the variable type under each of the column names.
@@ -623,7 +647,7 @@ Sometimes, to make it clear which package an object comes from, we’ll use the 
 
 ### Exercise 3
 
-Recall that the `+` sign is used to "chain" different pieces of plot creation code together. When doing data analysis, we use the "pipe" symbol --- `|>` --- to do the same things between different pieces code which manipulate the data.
+Recall that the `+` sign is used to "chain" different pieces of plot creation code together. When doing data analysis, we use the "pipe" symbol --- `|>` --- to do the same thing between different pieces code which manipulate the data.
 
 As a simple example, "pipe" the `gss_cat` tibble to the `print()` command.  
 
@@ -632,12 +656,12 @@ As a simple example, "pipe" the `gss_cat` tibble to the `print()` command.
 
 ```
 
-```{r running-r-code-3-hint, eval = FALSE}
+```{r running-r-code-3-hint-1, eval = FALSE}
 gss_cat |> 
   print()
 ```
 
-```{r include = FALSE}
+```{r running-r-code-3-test, include = FALSE}
 gss_cat |> 
   print()
 ```
@@ -655,12 +679,12 @@ Pipe `gss_cat` to `filter()` using the `|>`.  Within `filter()`, use the argumen
 
 ```
 
-```{r running-r-code-4-hint, eval = FALSE}
+```{r running-r-code-4-hint-1, eval = FALSE}
 gss_cat |> 
   filter(... > 88)
 ```
 
-```{r include = FALSE}
+```{r running-r-code-4-test, include = FALSE}
 gss_cat |> 
   filter(age > 88)
 ```
@@ -682,12 +706,12 @@ Continue the pipe with `select()`, using the argument `age, marital, race, relig
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r running-r-code-5-hint, eval = FALSE}
+```{r running-r-code-5-hint-1, eval = FALSE}
 ... |> 
   select(age, ..., race, ..., tvhours)
 ```
 
-```{r include = FALSE}
+```{r running-r-code-5-test, include = FALSE}
 gss_cat |> 
   filter(age > 88) |> 
   select(age, marital, race, relig, tvhours)
@@ -707,12 +731,12 @@ Use the "Copy previous code" button to place a copy of the pipe from the last qu
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r running-r-code-6-hint, eval = FALSE}
+```{r running-r-code-6-hint-1, eval = FALSE}
 ... |> 
   arrange(desc(...))
 ```
 
-```{r include = FALSE}
+```{r running-r-code-6-test, include = FALSE}
 gss_cat |> 
   filter(age > 88) |> 
   select(age, marital, race, relig, tvhours) |> 

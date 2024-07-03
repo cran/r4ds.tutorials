@@ -64,7 +64,7 @@ library(tidyverse)
 
 ### 
 
-Take careful note of the conflicts message that’s printed when you load the **tidyverse**. It tells you that **dplyr** versions of some functions now take precedence over functions with the same name in base R. If you want to use the base version of these functions after loading **dplyr**, you’ll need to use their full names: `stats::filter()` and `stats::lag()`. So far we’ve mostly ignored which package a function comes from because most of the time it doesn’t matter. However, knowing the package can help you find help and find related functions, so when we need to be precise about which function a package comes from, we’ll use the same syntax as R: `package.name::function_name()`.
+Take careful note of the conflicts message that’s printed when you load the **tidyverse**. It tells you that **dplyr** versions of some functions now take precedence over functions with the same name in base R. If you want to use the base version of these functions after loading **dplyr**, you’ll need to use their full names: `stats::filter()` and `stats::lag()`. So far we’ve mostly ignored which package a function comes from because most of the time it doesn’t matter. However, knowing the package can help you find help and find related functions, so when we need to be precise about which package a function comes from, we’ll use the same syntax as R: `package.name::function_name()`.
 
 ### Exercise 2
 
@@ -225,11 +225,13 @@ It is often useful to, temporarily add a simple function to the end of a pipe to
 
 Remove `nrow()` from the pipe.
 
-You can use boolean logic when filtering. For example, `&` means "and" and `|` means "or." Pipe `flights` to `filter()` with the argument set to `month == 1 & day == 1` to get all the flights on the first day of January.
+You can use boolean logic when filtering. For example, `&` means *and* and `|` means *or*. Pipe `flights` to `filter()` with the argument set to `month == 1 & day == 1` to get all the flights on the first day of January.
 
 ```{r rows-9, exercise = TRUE}
 
 ```
+
+<button onclick = "transfer_code(this)">Copy previous code</button>
 
 ```{r rows-9-hint-1, eval = FALSE}
 flights |> 
@@ -247,7 +249,7 @@ Instead of `&`, you could have used a simple comma, `,`, because `filter()` trea
 
 ### Exercise 10
 
-Pipe `flights` to `filter()` with the same argument as exercise 8, but use a comma (`,`) instead of `&`. It should produce the same set of rows.
+Pipe `flights` to `filter()` with the same argument as Exercise 9, but use a comma (`,`) instead of `&`. It should produce the same set of rows.
 
 ```{r rows-10, exercise = TRUE}
 
@@ -302,7 +304,7 @@ This “works”, in the sense that it doesn’t throw an error, but it doesn’
 
 When you run `filter()`, **dplyr** executes the filtering operation, creating a new data frame, and then prints it. It doesn’t modify the existing flights dataset because **dplyr** functions never modify their inputs.
 
-Create a new object, `jan1` which is the result of filtering `flights` to just including flights from January 1. In other words, put `jan1 <- ` in front of the code for Exercise 8 (`flights |> filter(month == 1 & day == 1)`).
+Create a new object, `jan1` which is the result of filtering `flights` to just including flights from January 1. In other words, put `jan1 <- ` in front of the code for Exercise 9 (`flights |> filter(month == 1 & day == 1)`).
 
 ```{r rows-12, exercise = TRUE}
 
@@ -324,7 +326,7 @@ The most common workflow is to build a pipe of commands, each time checking that
 
 ### Exercise 13
 
-Use the same code from the previous Exercise but, this time, create the `jan1` object at the end of the pipe, rather than the beginning. In other words, place `-> jan1` at after the call to `filter()`.
+Use the same code from the previous Exercise but, this time, create the `jan1` object at the end of the pipe, rather than the beginning. In other words, place `-> jan1` after the call to `filter()`.
 
 ```{r rows-13, exercise = TRUE}
 
@@ -368,7 +370,7 @@ flights |>
 
 ### 
 
-The first flight of the year was United (the `carrier` was "UA").
+The first flight of the year was United -- the `carrier` was "UA".
 
 ### Exercise 15
 
@@ -503,7 +505,7 @@ flights |>
 
 ### 
 
-In modern code, arguments to **dplyr** functions are proceeded with dots, `.`, in order to help distinguish them from variable names. But, `count()` is an older funtion, so its arguments, like `sort`, do not have a dot in front. 
+In modern code, arguments to **dplyr** functions are proceeded with dots, `.`, in order to help distinguish them from variable names. But, `count()` is an older function, so its arguments, like `sort`, do not have a dot in front. 
 
 
 ## Columns
@@ -731,7 +733,7 @@ Tidyverse selections implement a dialect of R where operators make it easy to se
 
 ### Exercise 8
 
-Put an explanation point, `!`, in front of `year:day` from the previous answer.
+Put an exclamation point, `!`, in front of `year:day` from the previous answer.
 
 
 ```{r columns-8, exercise = TRUE}
@@ -862,7 +864,7 @@ flights |>
 ## The pipe
 ### 
 
-We’ve shown you simple examples of the pipe above, but its real power arises when you start to combine multiple verbs. For example, imagine that you wanted to find the fast flights to Houston’s IAH airport: you need to combine `filter()`, `mutate()`, `select()`, and `arrange()`.
+We’ve shown you simple examples of the pipe above, but its real power arises when you start to combine multiple verbs. For example, imagine that you wanted to find the fastest flights to Houston’s IAH airport: you need to combine `filter()`, `mutate()`, `select()`, and `arrange()`.
 
 ### Exercise 1
 
@@ -884,7 +886,7 @@ flights |>
 
 ### 
 
-If you use `=` instead of `==`, R will give you a warning. One equal sign is for *assignment*. Two equal signs are for *comparisons*. Remeber that variable names, like `dest` are not quoted while the values of those variables, like `IAH` are quoted.
+If you use `=` instead of `==`, R will give you a warning. One equal sign is for *assignment*. Two equal signs are for *comparisons*. Remember that variable names, like `dest` are not quoted while the values of those variables, like `IAH` are quoted.
 
 ### Exercise 2
 
@@ -961,7 +963,7 @@ flights |>
 
 ### 
 
-Of course, in steady cruise, planes go faster than 300 to 400 mile per hour, but they go more slowly during take-off and landing, and, more importantly, they don't travel in a straight line between airports. 
+Of course, in steady cruise, planes go faster than 400 miles per hour, but they go more slowly during take-off and landing, and, more importantly, they don't travel in a straight line between airports. 
 
 ### Exercise 5
 
@@ -1014,7 +1016,7 @@ flights |>
 
 ### 
 
-Look at the data. Can you think of a reason that so many of the fastest flights happened on August 27 and 28? Our *guess* is that the jet stream was much slower than normal on those days. But solving mysteries like this is precisely why we need to use data science tools like **dplyr**.
+Look at the data. Can you think of a reason that so many of the fastest flights happened on August 27 and 28? Our *guess* is that the jet stream (which flows west to east) was much slower than normal on those days, thereby making it easier to fly westbound to Houston from New York. But solving mysteries like this is precisely why we need to use data science tools like **dplyr**.
 
 
 <!-- DK: Put in another pipe or two? Maybe show the final result at the beginning, and then show how we build to it at the end? -->
@@ -1239,12 +1241,12 @@ flights |>
 
 ### 
 
-Note how the flights come from a variety of months, unlike when we used `slice_head()` --- months all equal 1 --- and `slice_tail()` --- months all equal 9. (Note how the `flights` data is itself sorted in a weird way, with Decemmber flights sorted in between November (11) and February (2).)
+Note how the flights come from a variety of months, unlike when we used `slice_head()` --- months all equal 1 --- and `slice_tail()` --- months all equal 9. (Note how the `flights` data is itself sorted in a weird way, with December flights sorted in between November (11) and February (2).)
 
 
 ### Exercise 9
 
-`slice_max()` returns the row  with the `n` largest values of whatever variable you pass in as the value to the `order_by` argument. Pipe `flights` to `slice_max()`, setting `order_by` to `dep_delay` and `n` to equal `5`.
+`slice_max()` returns the rows with the `n` largest values of whatever variable you pass in as the value to the `order_by` argument. Pipe `flights` to `slice_max()`, setting `order_by` to `dep_delay` and `n` to equal `5`.
 
 ```{r groups-9, exercise = TRUE}
 

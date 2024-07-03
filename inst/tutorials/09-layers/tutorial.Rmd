@@ -237,7 +237,7 @@ Since `ggplot()` will only use six shapes at a time, by default, additional grou
 
 ### Exercise 8
 
-Replace the `color` argument with the `size` argument within `aes()`. Set the value to `class`, as before. Each point will have a size based on the `class` of the car.
+Replace the `shape` argument with the `size` argument within `aes()`. Set the value to `class`, as before. Each point will have a size based on the `class` of the car.
 
 ```{r aesthetic-mappings-8, exercise = TRUE}
 
@@ -272,7 +272,7 @@ Mapping an unordered discrete (categorical) variable, like `class`, to an ordere
 
 ### Exercise 9
 
-Replace the `color` argument with the `alpha` argument within `aes()`. Set the value to `class`, as before. Each point will have a transparency based on the `class` of the car.
+Replace the `size` argument with the `alpha` argument within `aes()`. Set the value to `class`, as before. Each point will have a transparency based on the `class` of the car.
 
 ```{r aesthetic-mappings-9, exercise = TRUE}
 
@@ -342,13 +342,11 @@ So far we have discussed aesthetics that we can map or set in a scatterplot, whe
 
 ### Exercise 1
 
-To change the geom in your plot, change the geom function that you add to `ggplot()`. Let's start with the plot which we were just working with, but with `color = "blue"` removed from the call to `geom_point()`. 
+To change the geom in your plot, change the geom function that you add to `ggplot()`. Let's start with the plot which we were just working with. (You need to copy this code by hand from the previous question because this is a new Section.) Use `color = "blue"` removed from the call to `geom_point()`. 
 
 ```{r geometric-objects-1, exercise = TRUE}
 
 ```
-
-<button onclick = "transfer_code(this)">Copy previous code</button>
 
 ```{r geometric-objects-1-hint-1, eval = FALSE}
 ggplot(..., aes(x = displ, 
@@ -662,7 +660,7 @@ It is convenient to rely on this feature because the `group` aesthetic by itself
 
 ### Exercise 11
 
-Switch `group = drv` to `color = drv` and add `show.legend = FALSE` to the call to `geom_smmoth()`.
+Switch `group = drv` to `color = drv` and add `show.legend = FALSE` to the call to `geom_smooth()`.
 
 
 ```{r geometric-objects-11, exercise = TRUE}
@@ -737,7 +735,7 @@ The easiest way to build a complex plot is *interactively*. Add one line. See ho
 
 ### Exercise 13
 
-Add a second call to `geom_point()`. In that call, set `data` equal to `mpg |> filter(class == "2seater")` and `color` equal to `red`.
+Add a second call to `geom_point()`. In that call, set `data` equal to `mpg |> filter(class == "2seater")` and `color` equal to `"red"`.
 
 ```{r geometric-objects-13, exercise = TRUE}
 
@@ -769,7 +767,7 @@ By default, calls to geoms use whatever values for the `data` argument have been
 
 ### Exercise 14
 
-Add a third call to `geom_point()`, setting `data` equal to `mpg |> filter(class == "2seater")`, `color` equal to `red` (as in the previous call), `shape` equal to `"circle open"`, and `size` equal to `3`.
+Add a third call to `geom_point()`, setting `data` equal to `mpg |> filter(class == "2seater")`, `color` equal to `"red"` (as in the previous call), `shape` equal to `"circle open"`, and `size` equal to `3`.
 
 
 ```{r geometric-objects-14, exercise = TRUE}
@@ -824,7 +822,7 @@ ggplot(mpg, aes(x = hwy)) +
 
 ### 
 
-The histogram reveala that the distribution of highway mileage is bimodal and right skewed. You can see a similar plot if you replace `geom_histogram(binwidth = 2)` with `geom_density()`.
+The histogram reveals that the distribution of highway mileage is bimodal and right skewed. You can see a similar plot if you replace `geom_histogram(binwidth = 2)` with `geom_density()`.
 
 ### Exercise 16
 
@@ -1046,7 +1044,7 @@ diamonds |>
 
 ### 
 
-Instead of passing in `diamonds` as the first argument to `ggplot()`, we can "pipe" it in with the `|>` symbol. Recall that `|>` does exactlt that, take the object in the left side --- in this case `diamonds` --- and pass it as the value of the firsr argument to the thing on the right side, in this case `ggplot()`.
+Instead of passing in `diamonds` as the first argument to `ggplot()`, we can "pipe" it in with the `|>` symbol. Recall that `|>` does exactly that, take the object in the left side --- in this case `diamonds` --- and pass it as the value of the first argument to the thing on the right side, in this case `ggplot()`.
 
 ### Exercise 3
 
@@ -1070,7 +1068,7 @@ diamonds |>
 
 ### 
 
-The plot has no data but the x-axis is correctlt labelled with all the possible values of the variable `cut`.
+The plot has no data but the x-axis is correctly labelled with all the possible values of the variable `cut`.
 
 
 ### Exercise 4
@@ -1130,7 +1128,7 @@ Many graphs, like scatterplots, plot the raw values of your dataset. Other graph
 
 ### Exercise 6
 
-`count()` outputs a tibble with values of the variable(s) you selected, along with the number of observations corresponding to each value. We can pipe this output directly into `ggplot()`, along with `aes(x = cut, y = n))`.
+`count()` outputs a tibble with values of the variable(s) you selected, along with the number of observations corresponding to each value. We can pipe this output directly into `ggplot()`, along with `aes(x = cut, y = n)`.
 
 ```{r statistical-transformations-6, exercise = TRUE}
 
@@ -1152,7 +1150,7 @@ diamonds |>
 
 ### 
 
-The algorithm used to calculate new values for a graph is called a "stat," short for statistical transformation. In this case, we are calculating the stat by hand, and then using the calculated. value `n` to make a plot.
+The algorithm used to calculate new values for a graph is called a "stat," short for statistical transformation. In this case, we are calculating the stat by hand, and then using the calculated value `n` to make a plot.
 
 
 ### Exercise 7
@@ -1351,7 +1349,7 @@ ggplot(mpg, aes(x = drv, fill = class)) +
 
 ### Exercise 5
 
-We can achieve a similar effect but `fill = NA` instead of `alpha = 1/5` in the class to `geom_bar()`.
+We can achieve a similar effect by `fill = NA` instead of `alpha = 1/5` in the class to `geom_bar()`.
 
 ```{r position-adjustments-5, exercise = TRUE}
 

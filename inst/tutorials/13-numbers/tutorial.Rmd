@@ -18,7 +18,7 @@ library(tidyverse)
 library(nycflights13)
 
 knitr::opts_chunk$set(echo = FALSE)
-options(tutorial.exercise.timelimit = 60, 
+options(tutorial.exercise.timelimit = 600, 
         tutorial.storage = "local") 
 
 df <- tribble(
@@ -63,6 +63,19 @@ This tutorial covers [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html) 
 [`round()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html) which rounds values in its first argument to the specified number of decimal places, and [`min_rank()`](https://dplyr.tidyverse.org/reference/row_number.html) which gives every tie the same value and ranks an inputted vector.
 
 The goal of this chapter is to learn how to parse numbers from strings, utilize numeric transformations on variables within datasets, and learn new ways to numerically summarize data. 
+
+Note that many of the exercises in this tutorial produce this warning:
+
+````
+Warning message:
+Returning more (or less) than 1 row per `summarise()` group was deprecated in dplyr 1.1.0.
+ℹ Please use `reframe()` instead.
+ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()` always returns an
+  ungrouped data frame and adjust accordingly.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+````
+
+Ignore that for now. We are fixing it.
 
 ## Making Numbers
 ### 
@@ -1262,9 +1275,9 @@ Run `?log` in the Console and copy paste the Description below. (Don't worry abo
 
 ```{r other-number-functions-1}
 question_text(NULL,
-	message = "Place correct answer here.",
 	answer(NULL, correct = TRUE),
-	allow_retry = FALSE,
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
 	incorrect = NULL,
 	rows = 6)
 ```
@@ -1428,6 +1441,7 @@ The `floor()` and `ceiling()` functions don’t have a digits argument, so you c
 ### Exercise 9
 
 Let's round down to the nearest two digits. Type in `floor(x / 0.01) * 0.01` and hit "Run Code".
+
 ```{r other-number-functions-9, exercise = TRUE}
 x <- 123.456
 ```
@@ -1841,7 +1855,7 @@ You can achieve many of the same results by picking the appropriate ties.method 
 
 ### Exercise 9
 
-Type in numbers and hit "Run Code". 
+Type in `numbers` and hit "Run Code". 
 
 ```{r general-transformations-9, exercise = TRUE}
 
@@ -1859,7 +1873,7 @@ numbers
 
 ### 
 
-The numbers dataset just lists the numbers from 1 through 10.
+The `numbers` tibble just has one variable, `id`,  with values from 1 through 10.
 
 ### Exercise 10
 
@@ -2800,12 +2814,12 @@ flights |>
     distance_sd = IQR(distance),
     n=n(),
     .by = c(origin, dest)) |>
-  filter(distance_sd >0)
+  filter(distance_sd > 0)
 ```
 
 ### 
 
-We can use this to reveal a small oddity in the flights data. You might expect the spread of the distance between origin and destination to be zero, since airports are always in the same place. But the code below reveals a data oddity for airport
+We can use this to reveal a small oddity in the flights data. You might expect the spread of the distance between origin and destination to be zero, since airports are always in the same place. But the code above reveals a data oddity for airport EGE (Eagle County Regional Airport).
 
 ### Exercise 19
 
@@ -2813,7 +2827,7 @@ Describe the oddity.
 
 ```{r numeric-summaries-19}
 question_text(NULL,
-	message = "Place correct answer here.",
+	message = "The distance between any two airports should be constant, obviously. Airports don't move! For some reason, the are distances between EGE, on one hand, and JFK/EWR on the other hand, are not always the same. That seems odd!",
 	answer(NULL, correct = TRUE),
 	allow_retry = FALSE,
 	incorrect = NULL,
