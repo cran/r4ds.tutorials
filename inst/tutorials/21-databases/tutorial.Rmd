@@ -64,7 +64,12 @@ planes <- tbl(con_nyc, "planes")
 
 <!-- There is a lot of text in the first few questions. Maybe spread that out but adding a few help look up questions? -->
 
-<!-- DK: Check exercise 12 in SQL to see if backticks show correctly. -->
+<!-- DK: Check exercise 12 in SQL to see if backticks show correctly. That is, does this look nice when viewed by students?
+
+SQL uses only `''` for strings, not `""`. In SQL, `""` is used to identify variables, like R’s ``` `` ```.
+
+
+-->
 
 
 ## Introduction
@@ -143,11 +148,11 @@ library(tidyverse)
 
 Databases are run by database management systems (DBMS’s for short), which come in three basic forms:
 
-* Client-server DBMS’s run on a powerful central server, which you connect from your computer (the client). They are great for sharing data with multiple people in an organization. Popular client-server DBMS’s include PostgreSQL, MariaDB, SQL Server, and Oracle.
+* Client-server DBMS’s run on a powerful central server, which you connect from your computer (the client). They are great for sharing data with multiple people in an organization.
 
-* Cloud DBMS’s, like Snowflake, Amazon’s RedShift, and Google’s BigQuery, are similar to client server DBMS’s, but they run in the cloud. This means that they can easily handle extremely large datasets and can automatically provide more compute resources as needed.
+* Cloud DBMS’s, are similar to client server DBMS’s, but they run in the cloud. This means that they can easily handle extremely large datasets and can automatically provide more compute resources as needed.
 
-* In-process DBMS’s, like SQLite or duckdb, run entirely on your computer. They’re great for working with large datasets where you’re the primary user.
+* In-process DBMS’s run entirely on your computer. They’re great for working with large datasets where you’re the primary user.
 
 ### Exercise 4
 
@@ -167,27 +172,64 @@ library(duckdb)
 
 ### 
 
-Setting up a client-server or cloud DBMS would be a pain for this book, so we’ll instead use an in-process DBMS that lives entirely in an R package: [**duckdb**](https://r.duckdb.org/). Thanks to the magic of DBI, the only difference between using **duckdb** and any other DBMS is how you’ll connect to the database. This makes it great to teach with because you can easily run this code as well as easily take what you learn and apply it elsewhere.
+<!-- AC: For the first sentence, should it be mentioning the book? (I know it's taken from it, but it seems out of place.) Done -->
+
+Setting up a client-server or cloud DBMS would be a pain for this tutorial, so we’ll instead use an in-process DBMS that lives entirely in an R package: [**duckdb**](https://r.duckdb.org/).
 
 ### Exercise 5
 
+Run `?duckdb` in the console after loading up the package. Copy/Paste the Description.
+
+```{r database-basics-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+### 
+
+Thanks to the magic of DBI, the only difference between using **duckdb** and any other DBMS is how you’ll connect to the database. This makes it great to teach with because you can easily run this code as well as easily take what you learn and apply it elsewhere.
+
+### Exercise 6
+
 Run `library()` for the [**nycflights13**](https://nycflights13.tidyverse.org/) package.
 
-```{r database-basics-5, exercise = TRUE}
+```{r database-basics-6, exercise = TRUE}
 
 ```
 
-```{r database-basics-5-hint-1, eval = FALSE}
+```{r database-basics-6-hint-1, eval = FALSE}
 ...(nycflights13)
 ```
 
-```{r database-basics-5-test, include = FALSE}
+```{r database-basics-6-test, include = FALSE}
 library(nycflights13)
 ```
 
 ### 
 
-In this tutorial, we’ll introduce **DBI** and **dbplyr**. **DBI** is a low-level interface that connects to databases and executes SQL; **dbplyr** is a high-level interface that translates your **dplyr** code to SQL queries then executes them with **DBI**. We will use data from the **nycflights13** package.
+We will use data from the **nycflights13** package.
+
+### Exercise 7
+
+Run `?flights` in the console after loading the `nycflights` library. Copy/Paste the description. 
+
+```{r database-basics-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+### 
+
+In this tutorial, we’ll introduce **DBI** and **dbplyr**. **DBI** is a low-level interface that connects to databases and executes SQL; **dbplyr** is a high-level interface that translates your **dplyr** code to SQL queries then executes them with **DBI**.
+
 
 ## Connecting to a database
 ### 
@@ -222,7 +264,7 @@ dbDisconnect(con, shutdown=TRUE)
 
 ### 
 
-If you can’t find a specific package for your DBMS, you can usually use the **odbc** package instead. This uses the ODBC protocol supported by many DBMS. **odbc** requires a little more setup because you’ll also need to install an ODBC driver and tell the **odbc** package where to find it.
+If you can’t find a specific package for your DBMS, you can usually use the **odbc** package instead. This uses the ODBC protocol supported by many DBMS's. **odbc** requires a little more setup because you’ll also need to install an ODBC driver and tell the **odbc** package where to find it.
 
 
 ### Exercise 2
@@ -273,7 +315,7 @@ dbDisconnect(con, shutdown=TRUE)
 
 Connecting to duckdb is particularly simple because the defaults create a temporary database that is deleted when you quit R. That’s great for learning because it guarantees that you’ll start from a clean slate every time you restart R. 
 
-But that it also a problem for a tutorial like this one because each Exercise is evaluated in isolation from everything else in the tutorial. That means we need to establish the connection in each Exercise. No worries though! We will provide the code for doing so, as needed.
+But it's also a problem for a tutorial like this one because each Exercise is evaluated in isolation from everything else in the tutorial. That means we need to establish the connection in each Exercise. No worries though! We will provide the code for doing so, as needed.
 
 ### Exercise 4
 
@@ -494,9 +536,11 @@ This SQL code selects 5 specific variables, from the `diamonds` dataset, and the
 
 ### Exercise 11
 
+<!-- AC: There's a mismatch between Exercises 11 and 12: In Exercise 11, we do as_tibble(dbGetQuery(...)), (the hint does not reflect this,) however in Exercise 12 it says that  the last exercise (11) returned a df instead of a tibble.  -->
+
 `dbGetQuery()` is a function which takes a connection and an SQL query as a text string as inputs. It returns the result of that query as a data frame. 
 
-Type `as_tibble()`. Within `as_tibble()`, add `dbGetQuery()` with the arguments `con` and `mpg_sql`
+Type `dbGetQuery()` with the arguments `con` and `my_sql`
 
 ```{r connecting-to-a-database-11, exercise = TRUE}
 con <- DBI::dbConnect(duckdb::duckdb())
@@ -589,7 +633,10 @@ dbDisconnect(con, shutdown=TRUE)
 
 ### 
 
-`tbl()` is a function **dtplyr** which creates a table. Note that a table is not the same thing as a tibble. Note the message at the top:
+<!-- DK: Some reports from students that no message is generated. -->
+
+`tbl()` is a function **dtplyr** which creates a table. Note that a table is not the same thing as a tibble. Note that there may be message at the top:
+
 
 ````
 Source:   table<diamonds> [?? x 10]
@@ -673,7 +720,7 @@ dbDisconnect(con, shutdown=TRUE)
 
 ### 
 
-You can tell this object represents a database query because it prints the DBMS name at the top, and while it tells you the number of columns, it typically doesn’t know the number of rows. This is because finding the total number of rows usually requires executing the complete query, something we’re trying to avoid.
+The DBMS name may be printed at the top. If so, it tells you the number of columns, but it typically won't report the number of rows. This is because finding the total number of rows usually requires executing the complete query, something we’re trying to avoid.
 
 ### Exercise 4
 
@@ -962,9 +1009,9 @@ planes |>
 
 ### 
 
-In the examples above note that "year" and "type" are wrapped in double quotes. That’s because these are reserved words in duckdb, so dbplyr quotes them to avoid any potential confusion between column/table names and SQL operators.
+In the examples above, note that "year" and "type" are wrapped in double quotes. That’s because these are reserved words in duckdb, so dbplyr quotes them to avoid any potential confusion between column/table names and SQL operators.
 
-When working with other databases you’re likely to see every variable name quotes because only a handful of client packages, like duckdb, know what all the reserved words are, so they quote everything to be safe.
+When working with other databases you’re likely to see every variable name in quotes because only a handful of client packages, like duckdb, know what all the reserved words are, so they quote everything to be safe.
 
 
 ### Exercise 9
@@ -1017,7 +1064,7 @@ flights |>
 
 ### 
 
-This example also shows you how SQL does renaming. In SQL terminology renaming is called aliasing and is done with `AS`. Note that unlike `mutate()`, the old name is on the left and the new name is on the right
+This example also shows you how SQL does renaming. In SQL terminology, renaming is called aliasing and is done with `AS`. Note that unlike `mutate()`, the old name is on the left and the new name is on the right. 
 
 ### Exercise 11
 
@@ -1107,6 +1154,8 @@ flights |>
 Study the correspondence between the **dplyr** code and the SQL code produced by `show_query()` if you want to start learning about SQL.
 
 ### Exercise 14
+
+<!-- AC: This paragraph might do with some extra formatting (with the `` and bolding perhaps). -->
 
 SQL uses NULL instead of NA. NULLs behave similarly to NAs. The main difference is that while they’re “infectious” in comparisons and arithmetic, they are silently dropped when summarizing. dbplyr will remind you about this behavior the first time you hit it. Run this code:
 
@@ -1205,7 +1254,7 @@ Notice how desc() is translated to DESC: this is one of the many dplyr functions
 
 ### Exercise 18
 
-Sometimes it’s not possible to translate a **dplyr** pipeline into a single `SELECT` statement and you need to use a subquery. A **subquery** is just a query used as a data source in the `FROM` clause, instead of the usual table.
+Sometimes it’s not possible to translate a **dplyr** pipeline into a single `SELECT` statement and you need to use a **subquery**. A **subquery** is just a query used as a data source in the `FROM` clause, instead of the usual table.
 
 Using the previous code, replace `arrange(year, month, day, desc(dep_delay))` with 
 
@@ -1293,13 +1342,56 @@ The main thing to notice here is the syntax: SQL joins use sub-clauses of the `F
 
 **dplyr**’s names for these functions are so closely connected to SQL that you can easily guess the equivalent SQL for `inner_join()`, `right_join()`, and `full_join()`.
 
-### 
+### Exercise 21
+
+Go to the console, install and load the **dm** package. CP/CR.
+
+```{r sql-21-ex}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+You’re likely to need many joins when working with data from a database. That’s because database tables are often stored in a highly normalized form, where each “fact” is stored in a single place and to keep a complete dataset for analysis you need to navigate a complex network of tables connected by primary and foreign keys.
 
 <!-- DK: Spread this text out into simple questions or else no one will read it. -->
 
-You’re likely to need many joins when working with data from a database. That’s because database tables are often stored in a highly normalized form, where each “fact” is stored in a single place and to keep a complete dataset for analysis you need to navigate a complex network of tables connected by primary and foreign keys. If you hit this scenario, the [**dm**](https://dm.cynkra.com/) package, by Tobias Schieferdecker, Kirill Müller, and Darko Bergant, is a life saver. It can automatically determine the connections between tables using the constraints that DBAs often supply, visualize the connections so you can see what’s going on, and generate the joins you need to connect one table to another.
+### Exercise 22
 
-### 
+Run `?dm`, copy/paste the description.
+
+```{r sql-22-ex}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+If you hit this scenario, the [**dm**](https://dm.cynkra.com/) package, is a life saver. It can automatically determine the connections between tables using the constraints that DBAs often supply, visualize the connections so you can see what’s going on, and generate the joins you need to connect one table to another.
+
+### Exercise 23
+
+Load the **dbplyr** package and run `?dbplyr` in the console. Copy/paste the description once again.
+
+```{r sql-23-ex}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
 
 **dbplyr** also translates other verbs like `distinct()`, `slice_*()`, and `intersect()`, and a growing selection of **tidyr** functions like `pivot_longer()` and `pivot_wider()`. The easiest way to see the full set of what’s currently available is to visit the **dbplyr** [website](https://dbplyr.tidyverse.org/reference/).
 

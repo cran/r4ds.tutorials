@@ -100,7 +100,7 @@ query <- seattle_pq |>
 ## Introduction
 ### 
 
-This tutorial covers [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. We will learn about the [**arrow**](https://arrow.apache.org/docs/r/) package for working with [Apache Arrow](https://arrow.apache.org/), a cross-language development platform for in-memory and larger-than-memory data. Key functions include `[open_dataset()](https://arrow.apache.org/docs/r/reference/open_dataset.html)` and `[write_dataset()](https://arrow.apache.org/docs/r/reference/write_dataset.html)`.
+This tutorial covers [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. We will learn about the [**arrow**](https://arrow.apache.org/docs/r/) package for working with [Apache Arrow](https://arrow.apache.org/), a cross-language development platform for in-memory and larger-than-memory data. Key functions include [`open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html) and [`write_dataset()`](https://arrow.apache.org/docs/r/reference/write_dataset.html).
 
 Note that the data used in this chapter is more than 8 gigabytes. This might be too much for your computer. Most on-line tools, like Posit Cloud, will not allow you to download so much data. If this causes you problems, just read the R4DS chapter: [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html).
 
@@ -162,7 +162,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 3)
+	rows = 10)
 ```
 
 ### 
@@ -304,7 +304,7 @@ curl::multi_download(
   resume = TRUE)
 ````
 
-This will download a 9 GB CSV file which will take about 5 minutes. So go check you email (or read more [*R for Data Science*](https://r4ds.hadley.nz/)!) and come back in 5 minutes.
+This will download a 9 GB CSV file which will take about 5 minutes. So go check your email (or read more [*R for Data Science*](https://r4ds.hadley.nz/)!) and come back in 5 minutes.
 
 CP/CR. (That is, **c**opy/**p**aste the **c**ommand and **r**esult (CP/CR) as your answer to this Exercise.) 
 
@@ -314,7 +314,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 3)
+	rows = 10)
 ```
 
 ### 
@@ -333,7 +333,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 3)
+	rows = 5)
 ```
 
 ### 
@@ -385,7 +385,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 3)
+	rows = 5)
 ```
 
 ### 
@@ -394,9 +394,10 @@ What happens when this code is run? `open_dataset()` will scan a few thousand ro
 
 ### Exercise 2
 
-For this and later Exercises which will be completed in the Console, you may find it useful to open a temporary R script. You write your answer there and then submit it to the Console with `Command/Ctrl + Enter`. This makes it easy to edit your code, often by adding more lines to the pipe, and then submit the answer to the next question.
+For this and later Exercises which will be completed in the Console, you may find it useful to open a temporary R script (`File -> New File -> R Script`). You can write your answer there and then run it in the Console with `Cmd/Ctrl + Enter`. This makes it easy to edit your code, often by adding more lines to the pipe, and then submit the answer to the next question.
 
-<!-- DK: Explain this better? Show video? -->
+<!-- DK: Explain this better? -->
+
 
 Run `seattle_csv` in the Console. CP/CR.
 
@@ -406,7 +407,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 3)
+	rows = 10)
 ```
 
 ```{r opening-a-dataset-2-test, include = FALSE}
@@ -415,11 +416,15 @@ seattle_csv
 
 ### 
 
-The first line in the output tells you that `seattle_csv` is stored locally on-disk as a single CSV file; it will only be loaded into memory as needed. The remainder of the output tells you the column type that arrow has imputed for each column.
+The first line in the output tells you that `seattle_csv` is stored locally on-disk as a single CSV file; it will only be loaded into memory as needed. The remainder of the output tells you the column type that arrow has inputted for each column.
 
 ### Exercise 3
 
 In the Console,  pipe `seattle_csv` into `glimpse()`. CP/CR.
+
+This file is big, so computations such as `glipmse()` will take a while to run.
+
+<!-- AC: It may be good to give a bit of a disclaimer that computations will generally take a while since the file's so big. Done -->
 
 ```{r opening-a-dataset-3}
 question_text(NULL,
@@ -437,7 +442,7 @@ seattle_csv |>
 
 ### 
 
-We can see what’s actually in with `glimpse()`. This reveals that there are ~41 million rows and 12 columns, and shows us a few values
+We can see what’s actually in it with `glimpse()`. This reveals that there are ~41 million rows and 12 columns, and shows us a few values. 
 
 
 ### Exercise 4
@@ -450,7 +455,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 4)
+	rows = 5)
 ```
 
 ```{r opening-a-dataset-4-test, include = FALSE}
@@ -464,7 +469,7 @@ This is quick, because no computations have been performed. R has just confirmed
 
 ### Exercise 5
 
-We can start to use this dataset with dplyr verbs, using `collect()` to force arrow to perform the computation and return some data. In the Console, add `collect()` to the end of the previous pipe. CP/CR.
+We can start to use this dataset with **dplyr** verbs, using `collect()` to force arrow to perform the computation and return some data. In the Console, add `collect()` to the end of the previous pipe. CP/CR.
 
 ```{r opening-a-dataset-5}
 question_text(NULL,
@@ -472,7 +477,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 4)
+	rows = 10)
 ```
 
 ```{r opening-a-dataset-5-test, include = FALSE}
@@ -487,7 +492,7 @@ There were more than 144 millions checkouts.
 
 ### Exercise 6
 
-To determine total checkouts by year, we add `.by = CheckoutYear` to the call to `summarize()` in the Console. After `summarize()` in the pipe, add `arrange(CheckoutYear)`. CP/CR.
+To determine total checkouts by year, add `.by = CheckoutYear` to the call to `summarize()` in the Console. Continue the pipe to `ggplot()`, map `CheckoutYear` to the x-axis and `Checkouts` to the y-axis. CP/CR.
 
 ```{r opening-a-dataset-6}
 question_text(NULL,
@@ -500,15 +505,54 @@ question_text(NULL,
 
 ```{r opening-a-dataset-6-test, include = FALSE}
 seattle_csv |>
-  summarise(Checkouts = sum(Checkouts), .by = CheckoutYear) |>
-  arrange(CheckoutYear) |>
-  collect()
+   summarise(Checkouts = sum(Checkouts), .by = CheckoutYear) |>
+   collect() |> ggplot(aes(x = CheckoutYear, y = Checkouts))
 ```
 
 ### 
 
 Thanks to **arrow**, this code will work regardless of how large the underlying dataset is. But it’s currently rather slow, taking several seconds to run. That’s not terrible given how much data we have, but we can make it much faster by switching to a better format.
 
+### Exercise 7
+
+Add the `geom_point()` and `geom_line()` layers. CP/CR
+
+```{r opening-a-dataset-7-ex}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+```{r -test, include = FALSE}
+seattle_csv |>
+   summarise(Checkouts = sum(Checkouts), .by = CheckoutYear) |>
+   collect() |> ggplot(aes(x = CheckoutYear, y = Checkouts)) + geom_point() + geom_line()
+```
+
+
+###
+
+We should have a cool looking graph here displaying checkouts by year
+
+### Exercise 8
+
+Add labels to your graph.
+
+```{r opening-a-dataset-8-ex}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+Next we will be dealing with the parquet format.
 
 ## The parquet format
 ### 
@@ -525,7 +569,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 10)
+	rows = 3)
 ```
 
 ```{r the-parquet-format-1-test, include = FALSE}
@@ -540,7 +584,7 @@ Like CSV, parquet is used for rectangular data, but instead of being a text form
 
 In the Console, start a pipe with `seattle_csv`. CP/CR.
 
-Again, instead of just typing everything directly into the Console, you might open a temporary R script and work from there, submitting to the Console with `Command/Ctrl + Enter`.
+Again, instead of just typing everything directly into the Console, you might open a temporary R script and work from there, submitting to the Console with `Cmd/Ctrl + Enter`.
 
 ```{r the-parquet-format-2}
 question_text(NULL,
@@ -548,7 +592,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 4)
+	rows = 10)
 ```
 
 ```{r the-parquet-format-2-test, include = FALSE}
@@ -557,7 +601,7 @@ seattle_csv
 
 ### 
 
-Parquet files are usually smaller the equivalent CSV file. Parquet relies on [efficient encodings](https://parquet.apache.org/docs/file-format/data-pages/encodings/) to keep file size down, and supports file compression. This helps make parquet files fast because there’s less data to move from disk to memory.
+Parquet files are usually smaller than the equivalent CSV file. Parquet relies on [efficient encodings](https://parquet.apache.org/docs/file-format/data-pages/encodings/) to keep file size down, and supports file compression. This helps make parquet files fast because there’s less data to move from disk to memory.
 
 ### Exercise 3
 
@@ -569,7 +613,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 4)
+	rows = 10)
 ```
 
 ```{r the-parquet-format-3-test, include = FALSE}
@@ -591,7 +635,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 3)
 ```
 
 ```{r the-parquet-format-4-test, include = FALSE}
@@ -635,11 +679,9 @@ Our single 9 GB CSV file has been rewritten into 18 parquet files. The file name
 ## Using dplyr with arrow
 ### 
 
-Now we’ve created these parquet files, we’ll need to read them in again. 
-
 ### Exercise 1
 
-Now we’ve created these parquet files, we’ll need to read them in again. We use `open_dataset()` again, but this time we give it a directory
+Now that we’ve created these parquet files, we’ll need to read them in again. We use `open_dataset()` again, but this time we give it a directory. 
 
 In the Console, assign `seattle_pq` to `open_dataset()` with the argument `pq_path` inside. CP/CR.
 
@@ -649,7 +691,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 10)
+	rows = 3)
 ```
 
 ```{r using-dplyr-with-arrow-1-test, include = FALSE}
@@ -662,7 +704,7 @@ As datasets get larger and larger, storing all the data in a single file gets in
 
 ### Exercise 2
 
-Run `seattle_pq` at the Console. Again, since we are building a pipe, you probably want to write `seattle_pq` in a temporary R script and then send it to the Console with `Command/Ctrl + Enter`. However you do it, CP/CR.
+Run `seattle_pq` at the Console. Again, since we are building a pipe, you probably want to write `seattle_pq` in a temporary R script and then send it to the Console with `Cmd/Ctrl + Enter`. However you do it, CP/CR.
 
 ```{r using-dplyr-with-arrow-2}
 question_text(NULL,
@@ -670,7 +712,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 10)
 ```
 
 ```{r using-dplyr-with-arrow-2-test, include = FALSE}
@@ -691,7 +733,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 10)
 ```
 
 ```{r using-dplyr-with-arrow-3-test, include = FALSE}
@@ -714,7 +756,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 10)
 ```
 
 ```{r using-dplyr-with-arrow-4-test, include = FALSE}
@@ -738,7 +780,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 10)
 ```
 
 ```{r using-dplyr-with-arrow-5-test, include = FALSE}
@@ -750,7 +792,7 @@ seattle_pq |>
 
 ### 
 
-This will create a new column that is called `TotalCheckouts` that is the sum of checkouts for that year/month. 
+This will create a new column called `TotalCheckouts` that is the sum of checkouts for that year/month. 
 
 ### Exercise 6
 
@@ -762,7 +804,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 10)
 ```
 
 ```{r using-dplyr-with-arrow-6-test, include = FALSE}
@@ -830,8 +872,6 @@ question_text(NULL,
 query
 ```
 
-### 
-
 ### Exercise 9
 
 Pipe `query` to `collect()` in the Console. CP/CR.
@@ -842,7 +882,7 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 10)
 ```
 
 ```{r using-dplyr-with-arrow-9-test, include = FALSE}
@@ -856,7 +896,7 @@ Like **dbplyr**, arrow only understands some R expressions, so you may not be ab
 
 ### Exercise 10
 
-Let’s take a quick look at the performance impact of switching from CSV to parquet. First, let’s time how long it takes to calculate the number of books checked out in each month of 2021, when the data is stored as a single large csv. Run this code in your Console.
+Let’s take a quick look at the performance impact of switching from CSV to parquet. First, let’s time how long it takes to calculate the number of books checked out in each month of 2021, when the data is stored as a single large CSV. Run this code in your Console.
 
 ````
 seattle_csv |> 
@@ -991,7 +1031,7 @@ unlink(list.files(tempdir(), full.names = TRUE))
 ## Summary
 ### 
 
-This tutorial covered [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. We learned about the [**arrow**](https://arrow.apache.org/docs/r/) package for working with [Apache Arrow](https://arrow.apache.org/), a cross-language development platform for in-memory and larger-than-memory data. Key functions included `[open_dataset()](https://arrow.apache.org/docs/r/reference/open_dataset.html)` and `[write_dataset()](https://arrow.apache.org/docs/r/reference/write_dataset.html)`.
+This tutorial covered [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. We learned about the [**arrow**](https://arrow.apache.org/docs/r/) package for working with [Apache Arrow](https://arrow.apache.org/), a cross-language development platform for in-memory and larger-than-memory data. Key functions included [`open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html) and [`write_dataset()`](https://arrow.apache.org/docs/r/reference/write_dataset.html).
 
 Read this **arrow** package [vignette](https://arrow.apache.org/docs/r/articles/dataset.html) for an another example of how to work with a large dataset.
  

@@ -16,7 +16,7 @@ library(learnr)
 library(tutorial.helpers)
 library(tidyverse)
 
-# Without thishack, we fail on GHA! cols() and col_factor() have conflicting
+# Without this hack, we fail on GHA! cols() and col_factor() have conflicting
 # versions in readr, vroom and scales. Of course, we want the readr versions. We
 # could solve this with either:
 
@@ -67,7 +67,7 @@ This tutorial covers [Chapter 16: Factors](https://r4ds.hadley.nz/factors.html) 
 ## Factor basics
 ### 
 
-Factors are used for categorical variables, variables that have a fixed and known set of possible values. They are also useful when you want to display character vectors in a non-alphabetical order.
+Factors are used for categorical variables --- variables that have a fixed and known set of possible values. They are also useful when you want to display character vectors in a non-alphabetical order.
 
 ### Exercise 1
 
@@ -81,6 +81,10 @@ Load the **tidyverse** library.
 
 ```{r factor-basics-1-hint-1, eval = FALSE}
 library(...)
+```
+
+```{r factor-basics-1-test, include = FALSE}
+library(tidyverse)
 ```
 
 ### 
@@ -112,7 +116,7 @@ Hit "Run Code" to create the variable `x1`.
 x1 <- c("Dec", "Apr", "Jan", "Mar")
 ```
 
-```{r include = FALSE}
+```{r factor-basics-3-test, include = FALSE}
 x1 <- c("Dec", "Apr", "Jan", "Mar")
 ```
 
@@ -134,7 +138,7 @@ Run `sort()` on `x1`.
 sort(...)
 ```
 
-```{r include = FALSE}
+```{r factor-basics-4-test, include = FALSE}
 sort(x1)
 ```
 
@@ -150,7 +154,7 @@ Hit "Run Code" to create the `x2` variable, another character vector. But note t
 x2 <- c("Dec", "Apr", "Jam", "Mar")
 ```
 
-```{r include = FALSE}
+```{r factor-basics-5-test, include = FALSE}
 x2 <- c("Dec", "Apr", "Jam", "Mar")
 ```
 
@@ -186,7 +190,7 @@ Run `factor(x1, levels = month_levels)`.
 factor(x1, ... = month_levels)
 ```
 
-```{r include = FALSE}
+```{r factor-basics-7-test, include = FALSE}
 factor(x1, levels = month_levels)
 ```
 
@@ -208,7 +212,7 @@ Wrap `factor(x1, levels = month_levels)` within a call to `sort()`.
 sort(...(x1, levels = ...))
 ```
 
-```{r include = FALSE}
+```{r factor-basics-8-test, include = FALSE}
 sort(factor(x1, levels = month_levels))
 ```
 
@@ -219,7 +223,7 @@ Instead of being sorted in alphabetical order, as before, the values are sorted 
 
 ### Exercise 9
 
-Run `factor(x2, levels = month_levels)`.
+Run `factor()` with two arguments: `x2` and `levels = month_levels`.
 
 
 ```{r factor-basics-9, exercise = TRUE}
@@ -230,7 +234,7 @@ Run `factor(x2, levels = month_levels)`.
 ...(x2, ... = month_levels)
 ```
 
-```{r include = FALSE}
+```{r factor-basics-9-test, include = FALSE}
 factor(x2, levels = month_levels)
 ```
 
@@ -242,8 +246,7 @@ Since "Jam" is not one of the levels, `factor()` coerces it to be missing, as sh
 
 Instead of `factor()`, we recommend using the `fct()` function from the **forcats** package, precisely because it generates an explicit error rather than a silent conversion to `NA`.
 
-Run `fct(x2, levels = month_levels)`.
-
+Run `fct(x2, levels = month_levels)` to see an example of this error.
 
 ```{r factor-basics-10, exercise = TRUE}
 
@@ -255,9 +258,10 @@ Run `fct(x2, levels = month_levels)`.
 ...(x2, ... = month_levels)
 ```
 
-### 
+<!-- Still haven't figure out how to test code which produces an error. -->
 
 Notice the thorough error message. "Jam" is missing from the `levels` as defined in the `month_levels` variable.
+
 
 ### Exercise 11
 
@@ -271,7 +275,7 @@ Run `factor()` and `x1`.
 factor(...)
 ```
 
-```{r include = FALSE}
+```{r factor-basics-11-test, include = FALSE}
 factor(x1)
 ```
 
@@ -293,7 +297,7 @@ Run `fct()` and `x1`.
 fct(...)
 ```
 
-```{r include = FALSE}
+```{r factor-basics-12-test, include = FALSE}
 fct(x1)
 ```
 
@@ -315,7 +319,7 @@ Take the code from the previous exercise use it as an argument to the function `
 levels(fct(...))
 ```
 
-```{r include = FALSE}
+```{r factor-basics-13-test, include = FALSE}
 levels(fct(x1))
 ```
 
@@ -331,7 +335,7 @@ The next exercises will be focusing on the variable `csv`. Hit "Run Code" to loo
 csv
 ```
 
-###
+### 
 
 Note the `\n`. That signifies a new line being formed, but doesn't make `csv` easier to read.
 
@@ -345,15 +349,15 @@ Run `read_csv()` with `csv` set as the argument
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r factor-basics-15-hint, eval = FALSE}
+```{r factor-basics-15-hint-1, eval = FALSE}
 read_csv(...)
 ```
 
-```{r, include = FALSE}
+```{r factor-basics-15-test, include = FALSE}
 read_csv(csv)
 ```
 
-###
+### 
 
 `csv` is now much easier to read and understand. We can see what belongs in the month column and the value column, as well as variable types the columns are.
 
@@ -367,15 +371,15 @@ Currently, the month column is a character type variable and the value column is
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r factor-basics-16-hint, eval = FALSE}
+```{r factor-basics-16-hint-1, eval = FALSE}
 read_csv(csv, ...)
 ```
 
-```{r, include = FALSE}
+```{r factor-basics-16-test, include = FALSE}
 read_csv(csv, col_types = "cc")
 ```
 
-###
+### 
 
 `col_types = "cc"` changes the variable types of the columns to both be characters. The first `c` in `cc` corresponds to the first column, and so on.
 
@@ -389,15 +393,15 @@ Change the value of `col_types` from `"cc"` to `cols(month = "c")` inside of `re
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r factor-basics-17-hint, eval = FALSE}
+```{r factor-basics-17-hint-1, eval = FALSE}
 read_csv(csv, col_types = cols(...))
 ```
 
-```{r, include = FALSE}
+```{r factor-basics-17-test, include = FALSE}
 read_csv(csv, col_types = cols(month = "c"))
 ```
 
-###
+### 
 
 ### Exercise 18
 
@@ -409,15 +413,15 @@ Change the value of `col_types` to `cols(month = "f"))`
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r factor-basics-18-hint, eval = FALSE}
+```{r factor-basics-18-hint-1, eval = FALSE}
 read_csv(csv, col_types = cols(...))
 ```
 
-```{r, include = FALSE}
+```{r factor-basics-18-test, include = FALSE}
 read_csv(csv, col_types = cols(month = "f"))
 ```
 
-###
+### 
 
 The month variable is now a variable of factor type. Having month as a factor will allow us to perform certain actions on it later on.
 
@@ -431,16 +435,16 @@ Continue the current pipe to `count()`. Set the argument to `month`.
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r factor-basics-19-hint, eval = FALSE}
+```{r factor-basics-19-hint-1, eval = FALSE}
 ... |>
   count(...)
 ```
 
-```{r, include = FALSE}
+```{r factor-basics-19-test, include = FALSE}
 read_csv(csv, col_types = cols(month = "f")) |> count(month)
 ```
 
-###
+### 
 
 While the tibble has all the correct information, it's not amazing to read. No one thinks of the months in those order. Luckily, this can be changed.
 
@@ -454,18 +458,18 @@ In `read_csv`, change the value of `col_types` to `cols(month = col_factor(month
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r factor-basics-20-hint, eval = FALSE}
+```{r factor-basics-20-hint-1, eval = FALSE}
 read_csv(csv, col_types = ...) |>
   count(month)
 ```
 
-```{r, include = FALSE}
+```{r factor-basics-20-test, include = FALSE}
 read_csv(csv, 
          col_types = cols(month = col_factor(month_levels))) |>  
   count(month)
 ```
 
-###
+### 
 
 Besides the use of `factor()` and `fct()` as described earlier, `col_factor()`, when used within `read_csv()` and similar import functions, is the most common way of creating factor variables.
 
@@ -478,15 +482,15 @@ The `gss_cat` tibble is a data set in the **forcats** package. It’s a sample o
 
 Type `gss_cat` and hit "Run Code."
 
-```{r general-social-surve-1, exercise = TRUE}
+```{r general-social-survey-1, exercise = TRUE}
 
 ```
 
-```{r general-social-surve-1-hint-1, eval = FALSE}
+```{r general-social-survey-1-hint-1, eval = FALSE}
 gss_cat
 ```
 
-```{r include = FALSE}
+```{r general-social-survey-1-test, include = FALSE}
 gss_cat
 ```
 
@@ -498,7 +502,7 @@ There are 9 variables and more than 20,000 observations. Note how the `print()` 
 
 Look up the help page for `gss_cat` by typing `?gss_cat` at the Console. Copy/paste the Description.
 
-```{r general-social-surve-2}
+```{r general-social-survey-2}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -516,16 +520,16 @@ When referring to a tibble (or other variable) which is part of a package, you c
 
 When factors are stored in a tibble, you can’t see their levels so easily. One way to view them is with `count()`. Pipe `gss_cat` to `count(race)`.
 
-```{r general-social-surve-3, exercise = TRUE}
+```{r general-social-survey-3, exercise = TRUE}
 
 ```
 
-```{r general-social-surve-3-hint-1, eval = FALSE}
+```{r general-social-survey-3-hint-1, eval = FALSE}
 gss_cat |>
   ...(race)
 ```
 
-```{r include = FALSE}
+```{r general-social-survey-3-test, include = FALSE}
 gss_cat |>
   count(race)
 ```
@@ -561,15 +565,15 @@ plot1
 
 Run `glimpse()` on `gss_cat`.
 
-```{r modifying-factor-ord-1, exercise = TRUE}
+```{r modifying-factor-order-1, exercise = TRUE}
 
 ```
 
-```{r modifying-factor-ord-1-hint-1, eval = FALSE}
+```{r modifying-factor-order-1-hint-1, eval = FALSE}
 glimpse(...)
 ```
 
-```{r include = FALSE}
+```{r modifying-factor-order-1-test, include = FALSE}
 glimpse(gss_cat)
 ```
 
@@ -581,11 +585,16 @@ We will be working with two variables: `relig` and `tvhours`. `relig` is a facto
 
 Pipe `gss_cat` to `summarize(n = n())`
 
-```{r modifying-factor-ord-2, exercise = TRUE}
+```{r modifying-factor-order-2, exercise = TRUE}
 
 ```
 
-```{r modifying-factor-ord-2-hint-1, eval = FALSE}
+```{r modifying-factor-order-2-hint-1, eval = FALSE}
+gss_cat |>
+  summarize(n = n())
+```
+
+```{r modifying-factor-order-2-test, include = FALSE}
 gss_cat |>
   summarize(n = n())
 ```
@@ -598,13 +607,19 @@ Note how the letter "n" is used in two ways. First, it is the name of a new vari
 
 Use the same pipe again, but add `.by = relig` as an argument/value pairing to `summarize()`.
 
-```{r modifying-factor-ord-3, exercise = TRUE}
+```{r modifying-factor-order-3, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-3-hint-1, eval = FALSE}
+```{r modifying-factor-order-3-hint-1, eval = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            .by = relig)
+```
+
+```{r modifying-factor-order-3-test, include = FALSE}
 gss_cat |>
   summarize(n = n(),
             .by = relig)
@@ -618,13 +633,20 @@ The result is a tibble with one row for each level of `relig`. (Older R code wil
 
 Use the same code again, adding another variable creation step to `summarize()`: `tvhours = mean(tvhours)`.
 
-```{r modifying-factor-ord-4, exercise = TRUE}
+```{r modifying-factor-order-4, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-4-hint-1, eval = FALSE}
+```{r modifying-factor-order-4-hint-1, eval = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            tvhours = mean(tvhours),
+            .by = relig)
+```
+
+```{r modifying-factor-order-4-test, include = FALSE}
 gss_cat |>
   summarize(n = n(),
             tvhours = mean(tvhours),
@@ -640,13 +662,20 @@ Note that each argument (or variable creation step) in `summarize()` must be sep
 
 Modify the pipe by add `na.rm = TRUE` as an argument *within* the `mean()` function.
 
-```{r modifying-factor-ord-5, exercise = TRUE}
+```{r modifying-factor-order-5, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-5-hint-1, eval = FALSE}
+```{r modifying-factor-order-5-hint-1, eval = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            tvhours = mean(tvhours, na.rm = TRUE),
+            .by = relig)
+```
+
+```{r modifying-factor-order-5-test, include = FALSE}
 gss_cat |>
   summarize(n = n(),
             tvhours = mean(tvhours, na.rm = TRUE),
@@ -661,13 +690,21 @@ All statistical functions in R will produce a value of NA if even a single one o
 
 Continue the pipe with a call to `ggplot()`, setting the `mapping` argument to `aes(x = tvhours, y = relig)`.
 
-```{r modifying-factor-ord-6, exercise = TRUE}
+```{r modifying-factor-order-6, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-6-hint-1, eval = FALSE}
+```{r modifying-factor-order-6-hint-1, eval = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            tvhours = mean(tvhours, na.rm = TRUE),
+            .by = relig) |> 
+  ggplot(aes(x = tvhours, y = relig))
+```
+
+```{r modifying-factor-order-6-test, include = FALSE}
 gss_cat |>
   summarize(n = n(),
             tvhours = mean(tvhours, na.rm = TRUE),
@@ -683,13 +720,22 @@ Without a geom function, no data is plotted. But we still get the plotting area 
 
 Add `geom_point()` to the pipe. Don't forget that calls to **ggplot** components are separated by plus signs, not pipes -- by `+` not `|>`.
 
-```{r modifying-factor-ord-7, exercise = TRUE}
+```{r modifying-factor-order-7, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-7-hint-1, eval = FALSE}
+```{r modifying-factor-order-7-hint-1, eval = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            tvhours = mean(tvhours, na.rm = TRUE),
+            .by = relig) |> 
+  ggplot(aes(x = tvhours, y = relig)) +
+  geom_point()
+```
+
+```{r modifying-factor-order-7-test, include = FALSE}
 gss_cat |>
   summarize(n = n(),
             tvhours = mean(tvhours, na.rm = TRUE),
@@ -710,19 +756,27 @@ It is hard to read this plot because there’s no overall pattern. We can improv
 
 Replace `y = relig` with `y = fct_reorder(relig, tvhours)` in your pipe.
 
-```{r modifying-factor-ord-8, exercise = TRUE}
+```{r modifying-factor-order-8, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-8-hint-1, eval = FALSE}
+```{r modifying-factor-order-8-hint-1, eval = FALSE}
 gss_cat |>
   summarize(n = n(),
             tvhours = mean(tvhours, na.rm = TRUE),
             .by = relig) |> 
   ggplot(aes(x = tvhours, y = fct_reorder(relig, tvhours))) +
   geom_point()
+```
+
+```{r modifying-factor-order-8-test, include = FALSE}
+gss_cat |>
+  summarize(n = n(),
+           tvhours = mean(tvhours, na.rm = TRUE),
+           .by = relig) |>
+  ggplot(aes(x = tvhours, y = fct_reorder(relig, tvhours)))
 ```
 
 ### 
@@ -733,19 +787,29 @@ Reordering religion makes it much easier to see that people in the “Don’t kn
 
 As you start making more complicated transformations, we recommend moving them out of `aes()` and into a separate `mutate()` step. After the `summarize()` step, insert this line: `mutate(relig = fct_reorder(relig, tvhours)) |> `. Then, change `y = fct_reorder(relig, tvhours)` back to `y = relig`.
 
-```{r modifying-factor-ord-9, exercise = TRUE}
+```{r modifying-factor-order-9, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-9-hint-1, eval = FALSE}
+```{r modifying-factor-order-9-hint-1, eval = FALSE}
 gss_cat |>
   summarize(n = n(),
             tvhours = mean(tvhours, na.rm = TRUE),
             .by = relig) |> 
   mutate(... = fct_reorder(relig, ...)) |> 
   ggplot(aes(x = tvhours, ... = relig)) +
+  geom_point()
+```
+
+```{r modifying-factor-order-9-test, include = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            tvhours = mean(tvhours, na.rm = TRUE),
+            .by = relig) |> 
+  mutate(relig = fct_reorder(relig, tvhours)) |> 
+  ggplot(aes(x = tvhours, y = relig)) +
   geom_point()
 ```
 
@@ -757,7 +821,7 @@ It is almost always better to complete your data transformations before starting
 
 Finish the plot by adding a title, subtitle, and axis labels. Remember that the plot looks like this:
 
-```{r modifying-factor-ord-10-example}
+```{r modifying-factor-order-10}
 plot1
 ```
 
@@ -767,12 +831,26 @@ plot1
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-10-hint-1, eval = FALSE}
+```{r modifying-factor-order-10-hint-1, eval = FALSE}
 ... +
   labs(... = "TV Watching and Religious Affiliation",
        subtitle = ...,
        x = ...,
        ... = "Religious Affiliation")
+```
+
+```{r modifying-factor-order-10-test, include = FALSE}
+gss_cat |>
+  summarize(n = n(),
+            tvhours = mean(tvhours, na.rm = TRUE),
+            .by = relig) |> 
+  mutate(relig = fct_reorder(relig, tvhours)) |> 
+  ggplot(aes(x = tvhours, y = relig)) +
+  geom_point()+
+  labs(title = "TV Watching and Religious Affiliation",
+       subtitle = "???",
+       x = "Hours watched",
+       y = "Religious Affiliation")
 ```
 
 ### 
@@ -804,13 +882,18 @@ plot2
 
 Pipe gss_cat to `filter()`, with the argument set as `!is.na(age)`
 
-```{r modifying-factor-ord-11, exercise = TRUE}
+```{r modifying-factor-order-11, exercise = TRUE}
 
 ```
 
-```{r modifying-factor-ord-11-hint-1, eval = FALSE}
+```{r modifying-factor-order-11-hint-1, eval = FALSE}
 gss_cat |>
   filter(...)
+```
+
+```{r modifying-factor-order-11-test, include = FALSE}
+gss_cat |>
+  filter(!is.na(age))
 ```
 
 ### 
@@ -821,28 +904,33 @@ This will remove all rows with a `NA` response to `age`, allowing for easier cal
 
 Continue the pipe to `count()`, with `age` and `marital` set as the arguments
 
-```{r modifying-factor-ord-12, exercise = TRUE}
+```{r modifying-factor-order-12, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-12-hint-1, eval = FALSE}
+```{r modifying-factor-order-12-hint-1, eval = FALSE}
 ... |>
   count(age, ...)
+```
+
+```{r modifying-factor-order-12-test, include = FALSE}
+gss_cat |>
+  filter(!is.na(age))|> count(age,marital)
 ```
 
 ### Exercise 13
 
 Continue the pipe to `mutate().` Create the variable `prop` and set it `n/sum(n)`
 
-```{r modifying-factor-ord-13, exercise = TRUE}
+```{r modifying-factor-order-13, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-13-hint-1, eval = FALSE}
+```{r modifying-factor-order-13-hint-1, eval = FALSE}
 ... |>
   mutate(... = n/sum(n))
 ```
@@ -851,13 +939,13 @@ Continue the pipe to `mutate().` Create the variable `prop` and set it `n/sum(n)
 
 Add the argument `.by` within the `mutate()` function. Set `.by` to `age`
 
-```{r modifying-factor-ord-14, exercise = TRUE}
+```{r modifying-factor-order-14, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-14-hint-1, eval = FALSE}
+```{r modifying-factor-order-14-hint-1, eval = FALSE}
 ... |>
   mutate(prop = n/sum(n), .by = ...)
 ```
@@ -870,13 +958,13 @@ Adding the `.by` argument allows us to sort the tibble by age for the mutate fun
 
 Add `ggplot()` to the current pipe. Set `x` to `age`, `y` to `prop` and `color` to `marital`
 
-```{r modifying-factor-ord-15, exercise = TRUE}
+```{r modifying-factor-order-15, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-15-hint-1, eval = FALSE}
+```{r modifying-factor-order-15-hint-1, eval = FALSE}
 ... |>
   ggplot(aes(x = ..., y = ..., color = ...))
 ```
@@ -885,13 +973,13 @@ Add `ggplot()` to the current pipe. Set `x` to `age`, `y` to `prop` and `color` 
 
 Continue the pipe to `geom_line()`. Inside the function, set `linewidth` to 1.
 
-```{r modifying-factor-ord-16, exercise = TRUE}
+```{r modifying-factor-order-16, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-16-hint-1, eval = FALSE}
+```{r modifying-factor-order-16-hint-1, eval = FALSE}
 ... +
   geom_line(linewidth = ...)
 ```
@@ -900,13 +988,13 @@ Continue the pipe to `geom_line()`. Inside the function, set `linewidth` to 1.
 
 Continue the pipe with `scale_color_brewer()`, with the argument `palette` set to "Set1".
 
-```{r modifying-factor-ord-17, exercise = TRUE}
+```{r modifying-factor-order-17, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-17-hint-1, eval = FALSE}
+```{r modifying-factor-order-17-hint-1, eval = FALSE}
 ... |>
   scale_color_brewer(... = "Set1")
 ```
@@ -915,13 +1003,13 @@ Continue the pipe with `scale_color_brewer()`, with the argument `palette` set t
 
 Finish the pipe with `labs()` giving an appropriate axes and legend titles.
 
-```{r modifying-factor-ord-18, exercise = TRUE}
+```{r modifying-factor-order-18, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-18-hint-1, eval = FALSE}
+```{r modifying-factor-order-18-hint-1, eval = FALSE}
 ... |>
   labs(x = ..., y = ..., color = ...)
 ```
@@ -934,13 +1022,13 @@ This graph is confusing to read as the colors assigned to the lines don't match 
 
 In the `ggplot()` function, change `color` from `marital` to `fct_reorder2(marital, age, prop)`
 
-```{r modifying-factor-ord-19, exercise = TRUE}
+```{r modifying-factor-order-19, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-ord-19-hint-1, eval = FALSE}
+```{r modifying-factor-order-19-hint-1, eval = FALSE}
 ... |>
   ggplot(aes(x = age, y = prop, color = fct_reorder2(marital, age, prop))) |>
   ...
@@ -960,16 +1048,16 @@ More powerful than changing the orders of the levels is changing their values. T
 Pipe `gss_cat` to `count(partyid)`
 
 
-```{r modifying-factor-lev-1, exercise = TRUE}
+```{r modifying-factor-levels-1, exercise = TRUE}
 
 ```
 
-```{r modifying-factor-lev-1-hint-1, eval = FALSE}
+```{r modifying-factor-levels-1-hint-1, eval = FALSE}
 ... |> 
   count(...)
 ```
 
-```{r include = FALSE}
+```{r modifying-factor-levels-1-test, include = FALSE}
 gss_cat |> 
   count(partyid)
 ```
@@ -983,11 +1071,11 @@ The levels of `partyid` are terse and inconsistent. Let’s tweak them to be lon
 Like most rename and recoding functions in the *Tidyverse*, the new values go on the left and the old values go on the right. Pipe `gss_cat` to `mutate()`. Within `mutate()`, use `partyid = fct_recode(partyid, "Republican, weak" = "Not str republican")` to change `partyid`.
 
 
-```{r modifying-factor-lev-2, exercise = TRUE}
+```{r modifying-factor-levels-2, exercise = TRUE}
 
 ```
 
-```{r modifying-factor-lev-2-hint-1, eval = FALSE}
+```{r modifying-factor-levels-2-hint-1, eval = FALSE}
 gss_cat |>
   mutate(
     partyid = ...(partyid,
@@ -1016,13 +1104,13 @@ Let's change all the values for `partyid`. Here is the mapping from new values t
 Use these within the call to `fct_recode()`.
 
 
-```{r modifying-factor-lev-3, exercise = TRUE}
+```{r modifying-factor-levels-3, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-3-hint-1, eval = FALSE}
+```{r modifying-factor-levels-3-hint-1, eval = FALSE}
 gss_cat |>
   mutate(
     partyid = fct_recode(partyid,
@@ -1056,13 +1144,13 @@ To combine groups, you can assign multiple old levels to the same new level. Wit
       "Other"                 = "Other party"
 ```
 
-```{r modifying-factor-lev-4, exercise = TRUE}
+```{r modifying-factor-levels-4, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-4-hint-1, eval = FALSE}
+```{r modifying-factor-levels-4-hint-1, eval = FALSE}
 gss_cat |>
   mutate(
     partyid = fct_recode(partyid,
@@ -1079,18 +1167,18 @@ Use this technique with care: if you group together categories that are truly di
 
 Continue the pipe to `count(partyid)` to confirm that the recoding has worked.
 
-```{r modifying-factor-lev-5, exercise = TRUE}
+```{r modifying-factor-levels-5, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-5-hint-1, eval = FALSE}
+```{r modifying-factor-levels-5-hint-1, eval = FALSE}
 ... |> 
   count(partyid)
 ```
 
-```{r include = FALSE}
+```{r modifying-factor-levels-5-test, include = FALSE}
 gss_cat |>
   mutate(
     partyid = fct_recode(partyid,
@@ -1108,7 +1196,6 @@ gss_cat |>
 
 ### 
 
-
 Read the help page for [`fct_recode()`](https://forcats.tidyverse.org/reference/fct_recode.html) for more details.
 
 ### Exercise 6
@@ -1124,13 +1211,13 @@ fct_collapse(partyid,
     )
 ```
 
-```{r modifying-factor-lev-6, exercise = TRUE}
+```{r modifying-factor-levels-6, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-6-hint-1, eval = FALSE}
+```{r modifying-factor-levels-6-hint-1, eval = FALSE}
 gss_cat |>
   ...(
     partyid = fct_collapse(...,
@@ -1153,14 +1240,14 @@ Sometimes you just want to lump together the small groups to make a plot or tabl
 
 Pipe `gss_cat` to `mutate()` with `relig = fct_lump_lowfreq(relig)` as its argument.
 
-```{r modifying-factor-lev-7, exercise = TRUE}
+```{r modifying-factor-levels-7, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
 
-```{r modifying-factor-lev-7-hint-1, eval = FALSE}
+```{r modifying-factor-levels-7-hint-1, eval = FALSE}
 gss_cat |>
   mutate(relig = ...)
 ```
@@ -1173,18 +1260,18 @@ gss_cat |>
 
 Continue the pipe to the function `count()` with `relig` as its argument.
 
-```{r modifying-factor-lev-8, exercise = TRUE}
+```{r modifying-factor-levels-8, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-8-hint-1, eval = FALSE}
+```{r modifying-factor-levels-8-hint-1, eval = FALSE}
 ... |>
   count(...)
 ```
 
-```{r include = FALSE}
+```{r modifying-factor-levels-8-test, include = FALSE}
 gss_cat |>
   mutate(relig = fct_lump_lowfreq(relig)) |>
   count(relig)
@@ -1198,33 +1285,37 @@ In this case it’s not very helpful: it is true that the majority of Americans 
 
 Instead, we can use the `fct_lump_n()` to specify that we want exactly 10 groups. Pipe `gss_cat` to `mutate()` with `relig = fct_lump_n(relig, n = 10)` as its argument.
 
-```{r modifying-factor-lev-9, exercise = TRUE}
+```{r modifying-factor-levels-9, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-9-hint-1, eval = FALSE}
+```{r modifying-factor-levels-9-hint-1, eval = FALSE}
 gss_cat |>
   mutate(relig = ...)
 ```
+
+### 
+
+`fct_lump_n()` is particularly useful when you have a factor with many levels, but you're only interested in analyzing the most common ones. Without it, analyses can become cluttered and difficult to interpret.
 
 ### Exercise 10
 
 Continue the pipe to `count()`. Add `relig` as an argument, as well as `sort = TRUE` to `count()`.
 
-```{r modifying-factor-lev-10, exercise = TRUE}
+```{r modifying-factor-levels-10, exercise = TRUE}
 
 ```
 
 <button onclick = "transfer_code(this)">Copy previous code</button>
 
-```{r modifying-factor-lev-10-hint, eval = FALSE}
+```{r modifying-factor-levels-10-hint-1, eval = FALSE}
 ... |>
   count(relig, ...)
 ```
 
-```{r include = FALSE}
+```{r modifying-factor-levels-10-test, include = FALSE}
 gss_cat |>
   mutate(relig = fct_lump_n(relig, n = 10)) |>
   count(relig, sort = TRUE)
@@ -1247,7 +1338,7 @@ Run this code
 ordered(c("a", "b", "c"))
 ```
 
-```{r include = FALSE}
+```{r ordered-factors-1-test, include = FALSE}
 ordered(c("a", "b", "c"))
 ```
 
