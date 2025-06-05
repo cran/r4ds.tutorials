@@ -1,6 +1,6 @@
 Package: r4ds.tutorials
 Title: Tutorials for "R for Data Science"
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: 
     person(given = "David",
            family = "Kane",
@@ -28,8 +28,9 @@ BugReports: https://github.com/PPBDS/r4ds.tutorials/issues
 URL: https://ppbds.github.io/r4ds.tutorials/,
         https://github.com/PPBDS/r4ds.tutorials
 NeedsCompilation: no
-Packaged: 2025-04-03 15:48:53 UTC; dkane
-Author: David Kane [aut, cre, cph] (<https://orcid.org/0000-0002-6660-3934>)
+Packaged: 2025-06-05 15:05:41 UTC; dkane
+Author: David Kane [aut, cre, cph] (ORCID:
+    <https://orcid.org/0000-0002-6660-3934>)
 Maintainer: David Kane <dave.kane@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-04-03 16:00:02 UTC
+Date/Publication: 2025-06-05 15:40:02 UTC

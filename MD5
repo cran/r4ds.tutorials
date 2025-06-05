@@ -1,11 +1,11 @@
-b59cd2c41edf90e7d1167214c7e2caf0 *DESCRIPTION
+ec2b6bb47b598df3d7958c5cc4dac414 *DESCRIPTION
 b4a9571a4104d4e08d3ace9c4eb94eb3 *LICENSE
 dc21c19f0d6968ee25d441b2cf46017d *NAMESPACE
-d2be2efc7602e91e0554190bb7055ecc *NEWS.md
+56c371a53c072cde3910e7a711c17e71 *NEWS.md
 fef988fcf563088feafad6ce1ae109e8 *R/r4ds.tutorials-package.R
-507480c30605fc4f6d9e1e25ba174929 *README.md
+56565bebb8bd93028eef9543c3d54e5c *README.md
 d81499560458ecc20b54b62b85981ad7 *inst/tutorials/00-introduction/images/base.png
-ca6195bcf81c7d0d95a3b00b1d0b0944 *inst/tutorials/00-introduction/tutorial.Rmd
+84459e3e3f68776e62d995463852011f *inst/tutorials/00-introduction/tutorial.Rmd
 b9e0bdf7ee9451745d3029220d406a47 *inst/tutorials/01-data-visualization/images/EDA-boxplot.png
 680bd22eeb3a43ba7283b375d5a53bc9 *inst/tutorials/01-data-visualization/images/tidy-data.png
 d3c011d8a2a3bb9554537f177248ff47 *inst/tutorials/01-data-visualization/tutorial.Rmd
