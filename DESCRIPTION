@@ -1,6 +1,6 @@
 Package: r4ds.tutorials
 Title: Tutorials for "R for Data Science"
-Version: 0.3.2
+Version: 0.3.3
 Authors@R: 
     person(given = "David",
            family = "Kane",
@@ -17,20 +17,20 @@ Description: When assigned "R for Data Science" (Wickham, Çetinkaya-Rundel,
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-Imports: tutorial.helpers (>= 0.3.0)
-Suggests: arrow, babynames, dbplyr, dplyr, duckdb, gert, gitcreds,
-        gghighlight, ggrepel, ggridges, ggthemes, gt, hexbin, janitor,
-        learnr, maps, nycflights13, palmerpenguins, patchwork, quarto,
-        readxl, reprex, repurrrsive, rsconnect, rvest, testthat (>=
-        3.0.0), tidymodels, tidyverse, usethis, writexl, Lahman
+Imports: tutorial.helpers
+Suggests: arrow, babynames, dbplyr, dplyr, duckdb, gghighlight,
+        ggrepel, ggridges, ggthemes, gt, hexbin, janitor, learnr, maps,
+        nycflights13, palmerpenguins, patchwork, readxl, reprex,
+        repurrrsive, rsconnect, rvest, testthat (>= 3.0.0), tidymodels,
+        tidyverse, writexl
 Config/testthat/edition: 3
 BugReports: https://github.com/PPBDS/r4ds.tutorials/issues
 URL: https://ppbds.github.io/r4ds.tutorials/,
         https://github.com/PPBDS/r4ds.tutorials
 NeedsCompilation: no
-Packaged: 2025-06-05 15:05:41 UTC; dkane
+Packaged: 2025-09-12 21:29:56 UTC; dkane
 Author: David Kane [aut, cre, cph] (ORCID:
     <https://orcid.org/0000-0002-6660-3934>)
 Maintainer: David Kane <dave.kane@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-06-05 15:40:02 UTC
+Date/Publication: 2025-09-12 21:40:02 UTC

@@ -1,3 +1,9 @@
+# r4ds.tutorials 0.3.3
+
+* id values now match directory location.
+
+* Removed RStudio related tutorials. Use positron.tutorials package instead.
+
 # r4ds.tutorials 0.3.2
 
 * Update Introduction tutorial.
